@@ -33,7 +33,7 @@ public class Main {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws IOException, InvalidFormatException {
+    public static void aeh(String[] args) throws IOException, InvalidFormatException {
         //Get the template
         JFileChooser templateChooser = new JFileChooser();
         templateChooser.setDialogTitle("Select the template");

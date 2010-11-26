@@ -5,6 +5,7 @@
 package schoolalyzer;
 
 import javax.swing.table.AbstractTableModel;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
 
 /**
@@ -20,14 +21,18 @@ public class ExcelTableModel extends AbstractTableModel {
     }
 
     public int getRowCount() {
-        return 8192;
+        return sheet.getLastRowNum() + 1;
     }
 
     public int getColumnCount() {
-        return 26; //A-Z
+        return 64; //Just an arbitrary value
     }
 
     public Object getValueAt(int rowIndex, int columnIndex) {
-        return sheet.getRow(rowIndex).getCell(columnIndex).getNumericCellValue();
+        Cell cell = sheet.getRow(rowIndex).getCell(columnIndex);
+        if (cell == null) {
+            throw new IllegalStateException("The returned Cell is null for row = " + rowIndex + " and column = " + columnIndex);
+        }
+        return POIUtil.getStringCellValueSafe(cell);
     }
 }

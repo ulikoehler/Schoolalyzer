@@ -29,7 +29,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 public class SchoolalzyerFrame extends javax.swing.JFrame {
 
     private Workbook templateWorkbook = null;
-    private LinkedList<Workbook> inputWorkbooks = null;
+    private LinkedList<Workbook> inputWorkbooks = new LinkedList<Workbook>();
     private Workbook outputWorkbook = null;
     private File outputWorkbookFile = null;
     //Icons
@@ -62,6 +62,11 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
     /** Creates new form SchoolalzyerFrame */
     public SchoolalzyerFrame() {
         initComponents();
+        //Set the current file chooser directory to the current directory
+        outputChooser.setCurrentDirectory(new File("."));
+        inputFileChooser.setCurrentDirectory(new File("."));
+        templateChooser.setCurrentDirectory(new File("."));
+        //Set the window icon
         setIconImage(piIcon.getImage());
     }
 
@@ -197,6 +202,10 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
             return;
         }
         File[] dataFiles = inputFileChooser.getSelectedFiles();
+        if(dataFiles.length == 0)
+        {
+            return; //No files to be processed
+        }
         //Open all the files as Workbooks
         for (File file : dataFiles) {
             try {
