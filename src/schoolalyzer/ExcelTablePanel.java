@@ -11,6 +11,8 @@
 
 package schoolalyzer;
 
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import org.apache.poi.ss.usermodel.Sheet;
 
 /**
@@ -27,8 +29,16 @@ public class ExcelTablePanel extends javax.swing.JPanel {
 
     public void setSheet(Sheet sheet) {
         this.sheet = sheet;
-        table.setDefaultRenderer(Object.class, new ExcelCellRenderer(sheet));
+        table.setDefaultRenderer(Object.class, new ExcelCellRenderer());
         table.setModel(new ExcelTableModel(sheet));
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        table.setCellSelectionEnabled(true);
+        //Resize the columns
+        /*for(int i = 0; i < table.getColumnCount() ; i++)
+        {
+            table.getColumnModel().getColumn(i).setPreferredWidth(sheet.getColumnWidth(i));
+        }*/
     }
 
     /** This method is called from within the constructor to
@@ -44,6 +54,9 @@ public class ExcelTablePanel extends javax.swing.JPanel {
         table = new javax.swing.JTable();
 
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
+
+        tableScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        tableScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {

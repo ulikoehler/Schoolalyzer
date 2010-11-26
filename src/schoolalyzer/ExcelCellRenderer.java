@@ -9,8 +9,10 @@ import java.awt.Component;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
+import javax.xml.bind.JAXB;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Sheet;
 
 /**
  *
@@ -18,22 +20,32 @@ import org.apache.poi.ss.usermodel.Sheet;
  */
 public class ExcelCellRenderer implements TableCellRenderer {
 
-    private Sheet sheet = null;
-
-    public ExcelCellRenderer(Sheet sheet) {
-        this.sheet = sheet;
-    }
-
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        JLabel label = new JLabel(value.toString());
+        if (value == null) {
+            System.out.println("adad");
+            JLabel label = new JLabel("");
+            if (isSelected) {
+                label.setForeground(Color.WHITE);
+                label.setBackground(Color.BLUE);
+            }
+            return label;
+        }
+        //else: the value = the cell is not null
+        Cell cell = (Cell) value;
+        //Set the text
+        JLabel label = new JLabel(POIUtil.getStringCellValueSafe(cell));
+        label.setOpaque(true);
+        //Set the foreground and the background colors
         if (isSelected) {
-            label.setBackground(Color.BLUE);
             label.setForeground(Color.WHITE);
+            label.setBackground(Color.BLUE);
         } else {
             //Set the colors from the Excel document
-            CellStyle cellStyle = sheet.getRow(row).getCell(column).getCellStyle();
-            label.setBackground(new Color(cellStyle.getFillBackgroundColor()));
-            label.setForeground(new Color(cellStyle.getFillForegroundColor()));
+            CellStyle cellStyle = cell.getCellStyle();
+            //label.setForeground(POIUtil.getForegroundColor(cellStyle));
+            Color backgroundColor = POIUtil.getBackgroundColor(cellStyle);
+            label.setForeground(POIUtil.getVisibleForegroundColor(backgroundColor));
+            label.setBackground(backgroundColor);
         }
         return label;
     }

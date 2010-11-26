@@ -27,7 +27,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
                   <Component id="applyButton" alignment="1" min="-2" max="-2" attributes="0"/>
-                  <Component id="tablesTabbedPane" alignment="0" pref="677" max="32767" attributes="0"/>
+                  <Component id="tablesTabbedPane" alignment="0" pref="977" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="templateFileLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="69" max="-2" attributes="0"/>
@@ -85,7 +85,7 @@
                   <Component id="outputStatusLabel" alignment="1" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
-              <Component id="tablesTabbedPane" pref="343" max="32767" attributes="0"/>
+              <Component id="tablesTabbedPane" pref="600" max="32767" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="applyButton" min="-2" pref="36" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>

@@ -6,10 +6,11 @@ package schoolalyzer;
 
 import javax.swing.table.AbstractTableModel;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
 /**
- *
+ * Table model returning POI Cells. Needs a special renderer.
  * @author uli
  */
 public class ExcelTableModel extends AbstractTableModel {
@@ -29,10 +30,6 @@ public class ExcelTableModel extends AbstractTableModel {
     }
 
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Cell cell = sheet.getRow(rowIndex).getCell(columnIndex);
-        if (cell == null) {
-            throw new IllegalStateException("The returned Cell is null for row = " + rowIndex + " and column = " + columnIndex);
-        }
-        return POIUtil.getStringCellValueSafe(cell);
+        return POIUtil.getCellSafe(sheet, rowIndex, columnIndex);
     }
 }
