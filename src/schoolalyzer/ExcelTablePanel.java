@@ -11,15 +11,24 @@
 
 package schoolalyzer;
 
+import org.apache.poi.ss.usermodel.Sheet;
+
 /**
  *
  * @author uli
  */
 public class ExcelTablePanel extends javax.swing.JPanel {
+    private Sheet sheet = null;
 
     /** Creates new form ExcelTablePanel */
     public ExcelTablePanel() {
         initComponents();
+    }
+
+    public void setSheet(Sheet sheet) {
+        this.sheet = sheet;
+        table.setDefaultRenderer(Object.class, new ExcelCellRenderer(sheet));
+        table.setModel(new ExcelTableModel(sheet));
     }
 
     /** This method is called from within the constructor to

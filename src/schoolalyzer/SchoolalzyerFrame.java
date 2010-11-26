@@ -13,10 +13,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
@@ -28,13 +29,19 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 public class SchoolalzyerFrame extends javax.swing.JFrame {
 
     private Workbook templateWorkbook = null;
-    private ArrayList<Workbook> inputWorkbooks = null;
+    private LinkedList<Workbook> inputWorkbooks = null;
     private Workbook outputWorkbook = null;
     private File outputWorkbookFile = null;
+    //Icons
     private ImageIcon infoIcon = new ImageIcon(getClass().getResource("/schoolalyzer/icons/dialog-information.png"));
     private ImageIcon warningIcon = new ImageIcon(getClass().getResource("/schoolalyzer/icons/dialog-warning.png"));
     private ImageIcon errorIcon = new ImageIcon(getClass().getResource("/schoolalyzer/icons/dialog-error.png"));
     private ImageIcon okIcon = new ImageIcon(getClass().getResource("/schoolalyzer/icons/task-complete.png"));
+    private ImageIcon piIcon = new ImageIcon(getClass().getResource("/schoolalyzer/icons/preferences-kcalc-constants.png"));
+    //File choosers
+    private JFileChooser outputChooser = new JFileChooser();
+    private JFileChooser templateChooser = new JFileChooser();
+    private JFileChooser inputFileChooser = new JFileChooser();
 
     private Workbook loadWorkbook(File file) throws IOException, InvalidFormatException {
         InputStream in = new BufferedInputStream(new FileInputStream(file));
@@ -55,6 +62,7 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
     /** Creates new form SchoolalzyerFrame */
     public SchoolalzyerFrame() {
         initComponents();
+        setIconImage(piIcon.getImage());
     }
 
     /** This method is called from within the constructor to
@@ -71,8 +79,8 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
         templateFileLabel = new javax.swing.JLabel();
         selectTemplateButton = new javax.swing.JButton();
         outputFileLabel = new javax.swing.JLabel();
-        selectOutputFileButto = new javax.swing.JButton();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        selectOutputFileButton = new javax.swing.JButton();
+        tablesTabbedPane = new javax.swing.JTabbedPane();
         templateStatusLabel = new javax.swing.JLabel();
         outputStatusLabel = new javax.swing.JLabel();
         inputStatusLabel = new javax.swing.JLabel();
@@ -101,10 +109,10 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
 
         outputFileLabel.setText("Ausgabedatei:");
 
-        selectOutputFileButto.setText("Auswählen");
-        selectOutputFileButto.addActionListener(new java.awt.event.ActionListener() {
+        selectOutputFileButton.setText("Auswählen");
+        selectOutputFileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                selectOutputFileButtoActionPerformed(evt);
+                selectOutputFileButtonActionPerformed(evt);
             }
         });
 
@@ -124,30 +132,31 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 677, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(applyButton)
+                    .addComponent(tablesTabbedPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 677, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(templateFileLabel)
+                        .addGap(69, 69, 69)
+                        .addComponent(selectTemplateButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(templateStatusLabel))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(inputFilesLabel)
-                            .addComponent(templateFileLabel)
                             .addComponent(outputFileLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(selectOutputFileButto)
+                                .addComponent(selectOutputFileButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(outputStatusLabel))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(selectTemplateButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(templateStatusLabel))
-                            .addGroup(layout.createSequentialGroup()
                                 .addComponent(selectInputFilesButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(inputStatusLabel))))
-                    .addComponent(applyButton, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addComponent(inputStatusLabel)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -158,7 +167,7 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
                     .addComponent(templateFileLabel)
                     .addComponent(selectTemplateButton)
                     .addComponent(templateStatusLabel))
-                .addGap(14, 14, 14)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -168,12 +177,12 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(outputFileLabel)
-                            .addComponent(selectOutputFileButto)))
+                            .addComponent(selectOutputFileButton)))
                     .addComponent(outputStatusLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(applyButton)
+                .addGap(14, 14, 14)
+                .addComponent(tablesTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(applyButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -181,34 +190,94 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void selectInputFilesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectInputFilesButtonActionPerformed
-        // TODO add your handling code here:
+        //Let the user select the files to load
+        inputFileChooser.setDialogTitle("Eingabedateien auswählen");
+        inputFileChooser.setMultiSelectionEnabled(true);
+        if (inputFileChooser.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+        File[] dataFiles = inputFileChooser.getSelectedFiles();
+        //Open all the files as Workbooks
+        for (File file : dataFiles) {
+            try {
+                inputWorkbooks.add(loadWorkbook(file));
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(this, "Eingabefehler beim Lesen der Datei " + file.getName(), "Eingabefehler", JOptionPane.ERROR_MESSAGE, errorIcon);
+                inputStatusLabel.setIcon(errorIcon);
+                inputStatusLabel.setText("Eingabefehler - bitte Dateien erneut laden!");
+            } catch (InvalidFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Das Format der Datei " + file.getName() + " wird nicht unterstützt", "Format nicht unterstützt", JOptionPane.ERROR_MESSAGE, errorIcon);
+                inputStatusLabel.setIcon(errorIcon);
+                inputStatusLabel.setText("Formatfehler - bitte Dateien erneut laden!");
+            }
+        }
+        //Find all sheet being present in all workbooks
+        //Algorithm: Initialize a list with the sheets of the first input document;
+        //  then iterate over the workbooks and remove sheet names not being in the workbook
+        LinkedList<String> sheetNames = new LinkedList<String>();
+        boolean isFirstWorkbook = true;
+        for (Workbook workbook : inputWorkbooks) {
+            if (isFirstWorkbook) {
+                for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
+                    sheetNames.add(workbook.getSheetName(i));
+                }
+                isFirstWorkbook = false;
+            } else {
+                for (String sheetName : sheetNames) {
+                    if (workbook.getSheet(sheetName) == null) {
+                        sheetNames.remove(sheetName);
+                    }
+                }
+            }
+        }
+        //Add the common sheets as tabs
+        for (String sheetName : sheetNames) {
+            ExcelTablePanel panel = new ExcelTablePanel();
+            panel.setSheet(inputWorkbooks.getFirst().getSheet(sheetName));
+            tablesTabbedPane.addTab(sheetName, panel);
+        }
+        //Set the status message
+        inputStatusLabel.setIcon(okIcon);
+        inputStatusLabel.setText(inputWorkbooks.size() + " Eingabedateien erfolgreich geladen");
     }//GEN-LAST:event_selectInputFilesButtonActionPerformed
 
-    private void selectOutputFileButtoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectOutputFileButtoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_selectOutputFileButtoActionPerformed
+    private void selectOutputFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectOutputFileButtonActionPerformed
+        outputChooser.setDialogTitle("Select the output file");
+        if (outputChooser.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+        outputWorkbookFile = outputChooser.getSelectedFile();
+    }//GEN-LAST:event_selectOutputFileButtonActionPerformed
 
     private void selectTemplateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectTemplateButtonActionPerformed
         //Show a dialog
-        JFileChooser templateChooser = new JFileChooser();
-        templateChooser.setDialogTitle("Select the template");
+        templateChooser.setDialogTitle("Vorlage auswählen");
         templateChooser.setMultiSelectionEnabled(false);
-        templateChooser.showOpenDialog(null);
+        if (templateChooser.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
         File templateFile = templateChooser.getSelectedFile();
         //Load the template
         try {
             templateWorkbook = loadWorkbook(templateFile);
+            templateStatusLabel.setIcon(okIcon);
+            templateStatusLabel.setText("Vorlage erfolgreich geladen");
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(this, "Eingabefehler beim Lesen der Vorlage: " + ex.getLocalizedMessage(), "Eingabefehler", JOptionPane.ERROR_MESSAGE, errorIcon);
+            templateStatusLabel.setIcon(errorIcon);
+            templateStatusLabel.setText("Eingabefehler - bitte Vorlage erneut laden!");
         } catch (InvalidFormatException ex) {
             JOptionPane.showMessageDialog(this, "Fehler beim Lesen der Vorlage: Das Dateiformat wird nicht unterstützt: " + ex.getLocalizedMessage(), "Format nicht unterstützt", JOptionPane.ERROR_MESSAGE, errorIcon);
+            templateStatusLabel.setIcon(errorIcon);
+            templateStatusLabel.setText("Formatfehler - bitte Vorlage erneut laden!");
         }
     }//GEN-LAST:event_selectTemplateButtonActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String args[]) throws Exception {
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
@@ -220,12 +289,12 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
     private javax.swing.JButton applyButton;
     private javax.swing.JLabel inputFilesLabel;
     private javax.swing.JLabel inputStatusLabel;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel outputFileLabel;
     private javax.swing.JLabel outputStatusLabel;
     private javax.swing.JButton selectInputFilesButton;
-    private javax.swing.JButton selectOutputFileButto;
+    private javax.swing.JButton selectOutputFileButton;
     private javax.swing.JButton selectTemplateButton;
+    private javax.swing.JTabbedPane tablesTabbedPane;
     private javax.swing.JLabel templateFileLabel;
     private javax.swing.JLabel templateStatusLabel;
     // End of variables declaration//GEN-END:variables
