@@ -11,9 +11,14 @@
 
 package schoolalyzer;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import org.apache.poi.ss.usermodel.Sheet;
+import schoolalyzer.actions.ActionManager;
 
 /**
  *
@@ -21,10 +26,15 @@ import org.apache.poi.ss.usermodel.Sheet;
  */
 public class ExcelTablePanel extends javax.swing.JPanel {
     private Sheet sheet = null;
+    private SchoolalzyerFrame parentFrame = null;
 
     /** Creates new form ExcelTablePanel */
     public ExcelTablePanel() {
         initComponents();
+    }
+
+    public void setParentFrame(SchoolalzyerFrame parentFrame) {
+        this.parentFrame = parentFrame;
     }
 
     public void setSheet(Sheet sheet) {
@@ -39,6 +49,25 @@ public class ExcelTablePanel extends javax.swing.JPanel {
         {
             table.getColumnModel().getColumn(i).setPreferredWidth(sheet.getColumnWidth(i));
         }*/
+        JPopupMenu popupMenu = new JPopupMenu();
+        for(String name : ActionManager.getInstance().getActionNames())
+        {
+            JMenuItem menuItem = new JMenuItem(name);
+            menuItem.addActionListener(new ActionListener() {
+
+                public void actionPerformed(ActionEvent e) {
+                    for(int selectedRow : table.getSelectedRows())
+                    {
+                        for(int selectedColumn : table.getSelectedColumns())
+                        {
+                            
+                        }
+                    }
+                }
+            });
+            popupMenu.add(menuItem);
+        }
+        table.setComponentPopupMenu();
     }
 
     /** This method is called from within the constructor to

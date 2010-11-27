@@ -21,6 +21,7 @@ import javax.swing.UIManager;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import schoolalyzer.actions.AbstractCellAction;
 
 /**
  *
@@ -42,6 +43,17 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
     private JFileChooser outputChooser = new JFileChooser();
     private JFileChooser templateChooser = new JFileChooser();
     private JFileChooser inputFileChooser = new JFileChooser();
+    //Actions
+    private LinkedList<AbstractCellAction> actions = new LinkedList<AbstractCellAction>();
+
+    public void addCellAction(AbstractCellAction action) {
+        actions.add(action);
+    }
+
+    public boolean hasAction(String name, int row, int column)
+    {
+        
+    }
 
     private Workbook loadWorkbook(File file) throws IOException, InvalidFormatException {
         InputStream in = new BufferedInputStream(new FileInputStream(file));

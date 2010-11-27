@@ -24,6 +24,22 @@ public abstract class AbstractCellAction {
         this.column = column;
     }
 
+    public int getColumn() {
+        return column;
+    }
+
+    public void setColumn(int column) {
+        this.column = column;
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public void setRow(int row) {
+        this.row = row;
+    }
+
     public void apply(List<Sheet> inputSheets, Sheet outputSheet) {
         //Get the input values
         LinkedList<Object> inputValues = new LinkedList<Object>();
@@ -71,6 +87,7 @@ public abstract class AbstractCellAction {
             }
         }
     }
+
 
     /**
      * Must be implemented by an action implementation to tell
