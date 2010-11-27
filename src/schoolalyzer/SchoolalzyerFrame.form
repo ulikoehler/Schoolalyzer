@@ -168,6 +168,9 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Anwenden"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="applyButtonActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

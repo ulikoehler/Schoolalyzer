@@ -13,12 +13,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import schoolalyzer.actions.AbstractCellAction;
@@ -44,15 +47,10 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
     private JFileChooser templateChooser = new JFileChooser();
     private JFileChooser inputFileChooser = new JFileChooser();
     //Actions
-    private LinkedList<AbstractCellAction> actions = new LinkedList<AbstractCellAction>();
+    private HashMap<String, LinkedList<AbstractCellAction>> actions = new HashMap<String, LinkedList<AbstractCellAction>>();
 
-    public void addCellAction(AbstractCellAction action) {
-        actions.add(action);
-    }
-
-    public boolean hasAction(String name, int row, int column)
-    {
-        
+    public void addCellAction(String sheetName, AbstractCellAction action) {
+        actions.get(sheetName).add(action);
     }
 
     private Workbook loadWorkbook(File file) throws IOException, InvalidFormatException {
@@ -144,6 +142,11 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
 
         applyButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/schoolalyzer/icons/task-complete.png"))); // NOI18N
         applyButton.setText("Anwenden");
+        applyButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                applyButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -214,8 +217,7 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
             return;
         }
         File[] dataFiles = inputFileChooser.getSelectedFiles();
-        if(dataFiles.length == 0)
-        {
+        if (dataFiles.length == 0) {
             return; //No files to be processed
         }
         //Open all the files as Workbooks
@@ -254,8 +256,10 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
         //Add the common sheets as tabs
         for (String sheetName : sheetNames) {
             ExcelTablePanel panel = new ExcelTablePanel();
-            panel.setSheet(inputWorkbooks.getFirst().getSheet(sheetName));
+            Sheet sheet = inputWorkbooks.getFirst().getSheet(sheetName);
+            panel.setSheet(sheet);
             tablesTabbedPane.addTab(sheetName, panel);
+            actions.put(sheet.getSheetName(), new LinkedList<AbstractCellAction>());
         }
         //Set the status message
         inputStatusLabel.setIcon(okIcon);
@@ -293,6 +297,23 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
             templateStatusLabel.setText("Formatfehler - bitte Vorlage erneut laden!");
         }
     }//GEN-LAST:event_selectTemplateButtonActionPerformed
+
+    private void applyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyButtonActionPerformed
+        for (Map.Entry<String, LinkedList<AbstractCellAction>> entry : actions.entrySet()) {
+            //Build a list of sheets to apply the action on
+            LinkedList<Sheet> sheets = new LinkedList<Sheet>();
+            for (Workbook workbook : inputWorkbooks) {
+                sheets.add(workbook.getSheet(entry.getKey())); //entry.getName() == sheet name
+            }
+
+            //Apply all actions to the sheet list
+            for (AbstractCellAction action : entry.getValue()) {
+                action.apply(sheets, outputWorkbook.getSheet(entry.getKey()));
+            }
+        }
+        //Save the workbook
+        JOptionPane.showMessageDialog(this, "Die Berechnung wurde erfolgreich abgeschlossen!", "Erfolg", JOptionPane.INFORMATION_MESSAGE, okIcon);
+    }//GEN-LAST:event_applyButtonActionPerformed
 
     /**
      * @param args the command line arguments

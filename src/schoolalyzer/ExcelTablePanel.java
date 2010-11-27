@@ -8,7 +8,6 @@
  *
  * Created on 26.11.2010, 20:34:52
  */
-
 package schoolalyzer;
 
 import java.awt.event.ActionEvent;
@@ -25,6 +24,7 @@ import schoolalyzer.actions.ActionManager;
  * @author uli
  */
 public class ExcelTablePanel extends javax.swing.JPanel {
+
     private Sheet sheet = null;
     private SchoolalzyerFrame parentFrame = null;
 
@@ -47,27 +47,26 @@ public class ExcelTablePanel extends javax.swing.JPanel {
         //Resize the columns
         /*for(int i = 0; i < table.getColumnCount() ; i++)
         {
-            table.getColumnModel().getColumn(i).setPreferredWidth(sheet.getColumnWidth(i));
+        table.getColumnModel().getColumn(i).setPreferredWidth(sheet.getColumnWidth(i));
         }*/
         JPopupMenu popupMenu = new JPopupMenu();
-        for(String name : ActionManager.getInstance().getActionNames())
-        {
+        for (String name : ActionManager.getInstance().getActionNames()) {
             JMenuItem menuItem = new JMenuItem(name);
+            final String finalName = name;
+            final Sheet finalSheet = sheet;
             menuItem.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
-                    for(int selectedRow : table.getSelectedRows())
-                    {
-                        for(int selectedColumn : table.getSelectedColumns())
-                        {
-                            
+                    for (int selectedRow : table.getSelectedRows()) {
+                        for (int selectedColumn : table.getSelectedColumns()) {
+                            parentFrame.addCellAction(finalSheet.getSheetName(), ActionManager.getInstance().getActionInstance(finalName, selectedRow, selectedColumn));
                         }
                     }
                 }
             });
             popupMenu.add(menuItem);
         }
-        table.setComponentPopupMenu();
+        table.setComponentPopupMenu(popupMenu);
     }
 
     /** This method is called from within the constructor to
@@ -102,11 +101,8 @@ public class ExcelTablePanel extends javax.swing.JPanel {
 
         add(tableScrollPane);
     }// </editor-fold>//GEN-END:initComponents
-
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable table;
     private javax.swing.JScrollPane tableScrollPane;
     // End of variables declaration//GEN-END:variables
-
 }
