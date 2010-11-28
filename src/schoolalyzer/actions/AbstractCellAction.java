@@ -4,11 +4,13 @@
  */
 package schoolalyzer.actions;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
+import schoolalyzer.CellTypeException;
 
 /**
  * This abstract class represents an action to be applied on one cell
@@ -40,28 +42,35 @@ public abstract class AbstractCellAction {
         this.row = row;
     }
 
-    public void apply(List<Sheet> inputSheets, Sheet outputSheet) {
+    public void apply(Collection<Sheet> inputSheets, Sheet outputSheet) {
         //Get the input values
         LinkedList<Object> inputValues = new LinkedList<Object>();
         for (Sheet sheet : inputSheets) {
             Cell inputCell = sheet.getRow(row).getCell(column);
-            switch (getInputType()) {
-                case BOOLEAN: {
-                    inputValues.add(inputCell.getBooleanCellValue());
-                    break;
+            try {
+                switch (getInputType()) {
+                    case BOOLEAN: {
+                        inputValues.add(inputCell.getBooleanCellValue());
+                        break;
+                    }
+                    case DATE: {
+                        inputValues.add(inputCell.getDateCellValue());
+                        break;
+                    }
+                    case DOUBLE: {
+                        inputValues.add(inputCell.getNumericCellValue());
+                        break;
+                    }
+                    case STRING: {
+                        inputValues.add(inputCell.getStringCellValue());
+                        break;
+                    }
                 }
-                case DATE: {
-                    inputValues.add(inputCell.getDateCellValue());
-                    break;
-                }
-                case DOUBLE: {
-                    inputValues.add(inputCell.getNumericCellValue());
-                    break;
-                }
-                case STRING: {
-                    inputValues.add(inputCell.getStringCellValue());
-                    break;
-                }
+            } catch (IllegalStateException ex) {
+                //This code implements the exception translator pattern
+                CellTypeException newEx = new CellTypeException(ex);
+                newEx.setSheet(sheet);
+                throw newEx;
             }
         }
         //Execute the action
@@ -87,7 +96,6 @@ public abstract class AbstractCellAction {
             }
         }
     }
-
 
     /**
      * Must be implemented by an action implementation to tell

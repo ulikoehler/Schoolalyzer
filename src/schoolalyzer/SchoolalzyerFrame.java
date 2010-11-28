@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -33,7 +34,7 @@ import schoolalyzer.actions.AbstractCellAction;
  */
 public class SchoolalzyerFrame extends javax.swing.JFrame {
 
-    private LinkedList<Workbook> inputWorkbooks = new LinkedList<Workbook>();
+    private HashMap<Workbook, String> inputWorkbooks = new HashMap<Workbook, String>(); //Maps the worbook to the filename (not path!) it was loaded from
     private Workbook outputWorkbook = null;
     private File outputWorkbookFile = null;
     //Icons
@@ -49,7 +50,7 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
     //Actions
     private HashMap<String, LinkedList<AbstractCellAction>> actions = new HashMap<String, LinkedList<AbstractCellAction>>();
     //Logging
-    private Logger logger = Logger.getLogger(SchoolalzyerFrame.class.getName());
+    private static final Logger logger = Logger.getLogger(SchoolalzyerFrame.class.getName());
     //Status variables
     boolean templateSet = false;
     boolean inputsSet = false;
@@ -226,10 +227,12 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
         if (dataFiles.length == 0) {
             return; //No files to be processed
         }
+        //Reset the input workbook data
+        inputWorkbooks.clear();
         //Open all the files as Workbooks
         for (File file : dataFiles) {
             try {
-                inputWorkbooks.add(loadWorkbook(file));
+                inputWorkbooks.put(loadWorkbook(file), file.getName());
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(this, "Eingabefehler beim Lesen der Datei " + file.getName(), "Eingabefehler", JOptionPane.ERROR_MESSAGE, errorIcon);
                 inputStatusLabel.setIcon(errorIcon);
@@ -247,11 +250,13 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
         //  then iterate over the workbooks and remove sheet names not being in the workbook
         LinkedList<String> sheetNames = new LinkedList<String>();
         boolean isFirstWorkbook = true;
-        for (Workbook workbook : inputWorkbooks) {
+        Workbook firstWorkbook = null;
+        for (Workbook workbook : inputWorkbooks.keySet()) {
             if (isFirstWorkbook) {
                 for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
                     sheetNames.add(workbook.getSheetName(i));
                 }
+                firstWorkbook = workbook;
                 isFirstWorkbook = false;
             } else {
                 for (String sheetName : sheetNames) {
@@ -265,7 +270,7 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
         for (String sheetName : sheetNames) {
             ExcelTablePanel panel = new ExcelTablePanel();
             panel.setParentFrame(this);
-            Sheet sheet = inputWorkbooks.getFirst().getSheet(sheetName);
+            Sheet sheet = firstWorkbook.getSheet(sheetName);
             panel.setSheet(sheet);
             tablesTabbedPane.addTab(sheetName, panel);
             actions.put(sheet.getSheetName(), new LinkedList<AbstractCellAction>());
@@ -284,7 +289,7 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
         outputSet = false;
         File tempOutputFile = outputChooser.getSelectedFile();
         if (tempOutputFile.exists()) {
-            int overwrite = JOptionPane.showConfirmDialog(this, "Datei existiert - überschreiben?", "Überschreiben", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, informationIcon);
+            int overwrite = JOptionPane.showConfirmDialog(this, "Datei existiert - überschreiben?", "Überschreiben", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (overwrite != JOptionPane.YES_OPTION) {
                 return;
             }
@@ -345,9 +350,12 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
         //Apply all actions
         for (Map.Entry<String, LinkedList<AbstractCellAction>> entry : actions.entrySet()) {
             //Build a list of sheets to apply the action on
+            HashMap<Sheet, Workbook> sheetToWorkbook = new HashMap<Sheet, Workbook>();
             LinkedList<Sheet> sheets = new LinkedList<Sheet>();
-            for (Workbook workbook : inputWorkbooks) {
-                sheets.add(workbook.getSheet(entry.getKey())); //entry.getName() == sheet name
+            for (Workbook workbook : inputWorkbooks.keySet()) {
+                Sheet sheet = workbook.getSheet(entry.getKey());
+                sheetToWorkbook.put(sheet, workbook);
+                sheets.add(sheet);
             }
 
             //Apply all actions to the sheet list
@@ -355,7 +363,13 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
                 if (action == null) {
                     logger.severe("Internal Error: The action is null!");
                 }
-                action.apply(sheets, outputWorkbook.getSheet(entry.getKey()));
+                try {
+                    action.apply(sheets, outputWorkbook.getSheet(entry.getKey()));
+                }
+                catch(CellTypeException ex) {
+                    JOptionPane.showMessageDialog(this, "Fehler in der Datei '" + inputWorkbooks.get(sheetToWorkbook.get(ex.getSheet())) + "' (Blatt '" + entry.getKey() + "') :\n" + ex.getUnderlyingCauseLocalizedMessage(), "Datenfehler", JOptionPane.ERROR_MESSAGE, errorIcon);
+                    return;
+                }
             }
         }
         try {

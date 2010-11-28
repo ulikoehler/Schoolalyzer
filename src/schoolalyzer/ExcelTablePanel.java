@@ -45,10 +45,6 @@ public class ExcelTablePanel extends javax.swing.JPanel {
         table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         table.setCellSelectionEnabled(true);
         //Resize the columns
-        /*for(int i = 0; i < table.getColumnCount() ; i++)
-        {
-        table.getColumnModel().getColumn(i).setPreferredWidth(sheet.getColumnWidth(i));
-        }*/
         JPopupMenu popupMenu = new JPopupMenu();
         for (String name : ActionManager.getInstance().getActionNames()) {
             JMenuItem menuItem = new JMenuItem(name);
