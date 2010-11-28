@@ -16,6 +16,7 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -32,12 +33,11 @@ import schoolalyzer.actions.AbstractCellAction;
  */
 public class SchoolalzyerFrame extends javax.swing.JFrame {
 
-    private Workbook templateWorkbook = null;
     private LinkedList<Workbook> inputWorkbooks = new LinkedList<Workbook>();
     private Workbook outputWorkbook = null;
     private File outputWorkbookFile = null;
     //Icons
-    private ImageIcon infoIcon = new ImageIcon(getClass().getResource("/schoolalyzer/icons/dialog-information.png"));
+    private ImageIcon informationIcon = new ImageIcon(getClass().getResource("/schoolalyzer/icons/dialog-information.png"));
     private ImageIcon warningIcon = new ImageIcon(getClass().getResource("/schoolalyzer/icons/dialog-warning.png"));
     private ImageIcon errorIcon = new ImageIcon(getClass().getResource("/schoolalyzer/icons/dialog-error.png"));
     private ImageIcon okIcon = new ImageIcon(getClass().getResource("/schoolalyzer/icons/task-complete.png"));
@@ -48,6 +48,12 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
     private JFileChooser inputFileChooser = new JFileChooser();
     //Actions
     private HashMap<String, LinkedList<AbstractCellAction>> actions = new HashMap<String, LinkedList<AbstractCellAction>>();
+    //Logging
+    private Logger logger = Logger.getLogger(SchoolalzyerFrame.class.getName());
+    //Status variables
+    boolean templateSet = false;
+    boolean inputsSet = false;
+    boolean outputSet = false;
 
     public void addCellAction(String sheetName, AbstractCellAction action) {
         actions.get(sheetName).add(action);
@@ -228,10 +234,12 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Eingabefehler beim Lesen der Datei " + file.getName(), "Eingabefehler", JOptionPane.ERROR_MESSAGE, errorIcon);
                 inputStatusLabel.setIcon(errorIcon);
                 inputStatusLabel.setText("Eingabefehler - bitte Dateien erneut laden!");
+                inputsSet = true;
             } catch (InvalidFormatException ex) {
                 JOptionPane.showMessageDialog(this, "Das Format der Datei " + file.getName() + " wird nicht unterstützt", "Format nicht unterstützt", JOptionPane.ERROR_MESSAGE, errorIcon);
                 inputStatusLabel.setIcon(errorIcon);
                 inputStatusLabel.setText("Formatfehler - bitte Dateien erneut laden!");
+                inputsSet = false;
             }
         }
         //Find all sheet being present in all workbooks
@@ -256,12 +264,14 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
         //Add the common sheets as tabs
         for (String sheetName : sheetNames) {
             ExcelTablePanel panel = new ExcelTablePanel();
+            panel.setParentFrame(this);
             Sheet sheet = inputWorkbooks.getFirst().getSheet(sheetName);
             panel.setSheet(sheet);
             tablesTabbedPane.addTab(sheetName, panel);
             actions.put(sheet.getSheetName(), new LinkedList<AbstractCellAction>());
         }
         //Set the status message
+        inputsSet = true;
         inputStatusLabel.setIcon(okIcon);
         inputStatusLabel.setText(inputWorkbooks.size() + " Eingabedateien erfolgreich geladen");
     }//GEN-LAST:event_selectInputFilesButtonActionPerformed
@@ -271,7 +281,23 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
         if (outputChooser.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) {
             return;
         }
-        outputWorkbookFile = outputChooser.getSelectedFile();
+        outputSet = false;
+        File tempOutputFile = outputChooser.getSelectedFile();
+        if (tempOutputFile.exists()) {
+            int overwrite = JOptionPane.showConfirmDialog(this, "Datei existiert - überschreiben?", "Überschreiben", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, informationIcon);
+            if (overwrite != JOptionPane.YES_OPTION) {
+                return;
+            }
+        }
+        if (!tempOutputFile.canWrite() && (!tempOutputFile.exists() && !tempOutputFile.getParentFile().canWrite())) {
+            JOptionPane.showMessageDialog(this, "In diese Datei kann nicht geschrieben werden! Bitte andere Ausgabedatei wählen!", "Schreiben nicht erlaubt", JOptionPane.ERROR_MESSAGE, errorIcon);
+            return;
+        }
+        //Everything's OK, so set the status label and the output file member variable
+        outputWorkbookFile = tempOutputFile;
+        outputStatusLabel.setIcon(okIcon);
+        outputStatusLabel.setText("Ausgabedatei erfolgreich gesetzt");
+        outputSet = true;
     }//GEN-LAST:event_selectOutputFileButtonActionPerformed
 
     private void selectTemplateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectTemplateButtonActionPerformed
@@ -282,13 +308,17 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
             return;
         }
         File templateFile = templateChooser.getSelectedFile();
+        //If the action does not succeed, the users sees the standard message
+        templateSet = false;
+        templateStatusLabel.setText("Bitte Vorlage laden!");
+        templateStatusLabel.setIcon(informationIcon);
         //Load the template
         try {
-            templateWorkbook = loadWorkbook(templateFile);
+            outputWorkbook = loadWorkbook(templateFile); //There is no separate templateWorkbook variable because the only use of the template file is to provide empty fields for the output
             templateStatusLabel.setIcon(okIcon);
             templateStatusLabel.setText("Vorlage erfolgreich geladen");
+            templateSet = true;
         } catch (IOException ex) {
-            JOptionPane.showMessageDialog(this, "Eingabefehler beim Lesen der Vorlage: " + ex.getLocalizedMessage(), "Eingabefehler", JOptionPane.ERROR_MESSAGE, errorIcon);
             templateStatusLabel.setIcon(errorIcon);
             templateStatusLabel.setText("Eingabefehler - bitte Vorlage erneut laden!");
         } catch (InvalidFormatException ex) {
@@ -299,6 +329,20 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_selectTemplateButtonActionPerformed
 
     private void applyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyButtonActionPerformed
+        //Check if everything is set
+        if (!templateSet) {
+            JOptionPane.showMessageDialog(this, "Bitte Vorlage laden!", "Vorlage nicht geladen", JOptionPane.ERROR_MESSAGE, errorIcon);
+            return;
+        }
+        if (!outputSet) {
+            JOptionPane.showMessageDialog(this, "Bitte Ausgabedatei setzen!", "Ausgabedatei nicht gesetzt", JOptionPane.ERROR_MESSAGE, errorIcon);
+            return;
+        }
+        if (!inputsSet) {
+            JOptionPane.showMessageDialog(this, "Bitte Eingabedateien laden!", "Eingabedateien nicht geladen", JOptionPane.ERROR_MESSAGE, errorIcon);
+            return;
+        }
+        //Apply all actions
         for (Map.Entry<String, LinkedList<AbstractCellAction>> entry : actions.entrySet()) {
             //Build a list of sheets to apply the action on
             LinkedList<Sheet> sheets = new LinkedList<Sheet>();
@@ -308,10 +352,18 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
 
             //Apply all actions to the sheet list
             for (AbstractCellAction action : entry.getValue()) {
+                if (action == null) {
+                    logger.severe("Internal Error: The action is null!");
+                }
                 action.apply(sheets, outputWorkbook.getSheet(entry.getKey()));
             }
         }
-        //Save the workbook
+        try {
+            //Save the workbook
+            saveOutputWorkbook();
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, "Fehler beim Schreiben des Dokuments: " + ex.getLocalizedMessage(), "Schreibfehler", JOptionPane.ERROR_MESSAGE, errorIcon);
+        }
         JOptionPane.showMessageDialog(this, "Die Berechnung wurde erfolgreich abgeschlossen!", "Erfolg", JOptionPane.INFORMATION_MESSAGE, okIcon);
     }//GEN-LAST:event_applyButtonActionPerformed
 
