@@ -107,6 +107,11 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
         outputStatusLabel = new javax.swing.JLabel();
         inputStatusLabel = new javax.swing.JLabel();
         applyButton = new javax.swing.JButton();
+        menuBar = new javax.swing.JMenuBar();
+        fileMenu = new javax.swing.JMenu();
+        exitMenuItem = new javax.swing.JMenuItem();
+        extrasMenu = new javax.swing.JMenu();
+        csvImporterMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Schoolalyzer");
@@ -154,6 +159,28 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
                 applyButtonActionPerformed(evt);
             }
         });
+
+        fileMenu.setText("Datei");
+
+        exitMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/schoolalyzer/icons/task-reject.png"))); // NOI18N
+        exitMenuItem.setText("Beenden");
+        exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exitMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(exitMenuItem);
+
+        menuBar.add(fileMenu);
+
+        extrasMenu.setText("Extras");
+
+        csvImporterMenuItem.setText("CSV Importieren");
+        extrasMenu.add(csvImporterMenuItem);
+
+        menuBar.add(extrasMenu);
+
+        setJMenuBar(menuBar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -207,7 +234,7 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
                             .addComponent(selectOutputFileButton)))
                     .addComponent(outputStatusLabel))
                 .addGap(14, 14, 14)
-                .addComponent(tablesTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
+                .addComponent(tablesTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 573, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(applyButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -381,6 +408,10 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "Die Berechnung wurde erfolgreich abgeschlossen!", "Erfolg", JOptionPane.INFORMATION_MESSAGE, okIcon);
     }//GEN-LAST:event_applyButtonActionPerformed
 
+    private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_exitMenuItemActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -395,8 +426,13 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton applyButton;
+    private javax.swing.JMenuItem csvImporterMenuItem;
+    private javax.swing.JMenuItem exitMenuItem;
+    private javax.swing.JMenu extrasMenu;
+    private javax.swing.JMenu fileMenu;
     private javax.swing.JLabel inputFilesLabel;
     private javax.swing.JLabel inputStatusLabel;
+    private javax.swing.JMenuBar menuBar;
     private javax.swing.JLabel outputFileLabel;
     private javax.swing.JLabel outputStatusLabel;
     private javax.swing.JButton selectInputFilesButton;
