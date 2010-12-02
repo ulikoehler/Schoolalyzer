@@ -10,20 +10,32 @@
  */
 package schoolalyzer;
 
+import com.sun.xml.internal.ws.message.ByteArrayAttachment;
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Vector;
 import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import schoolalyzer.parsers.CSVParser;
+import schoolalyzer.util.IteratorIterable;
 import schoolalyzer.util.POIUtil;
 
 /**
@@ -258,28 +270,58 @@ public class CSVImporterFrame extends javax.swing.JFrame {
         outputSet = true;
 }//GEN-LAST:event_selectOutputFileButtonActionPerformed
 
-    private void handleCSVFile(String name, InputStream in)
-    {
+    private int handleCSVFile(String name, InputStream in, int nextRow) {
         //Get the sheet or create it if it doesn't exist
         Sheet sheet = outputWorkbook.getSheet(name);
-        if(sheet == null)
-        {
-
+        if (sheet == null) {
+            sheet = outputWorkbook.createSheet();
         }
+        //Get the first row to insert into
+        CSVParser parser = new CSVParser(in, "\"", ",");
+        for (Vector<String> data : new IteratorIterable<Vector<String>>(parser.getDataIterator())) {
+            Row row = sheet.getRow(nextRow);
+            for (int i = 0; i < data.size(); i++) {
+                row.getCell(i).setCellValue(data.get(i));
+            }
+            nextRow++;
+        }
+        return nextRow;
     }
 
     private void applyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyButtonActionPerformed
-        for(File inputFile : inputFiles)
-        {
 
-        }
         try {
+            HashMap<String, Integer> nextRows = new HashMap<String, Integer>(); //Maps the sheet name to the next row number
+            for (File inputFile : inputFiles) {
+                if (inputFile.getName().endsWith(".zip")) {
+                    ZipInputStream in = new ZipInputStream(new BufferedInputStream(new FileInputStream(inputFile)));
+                    //ZipArchiveInputStream in = new ZipArchiveInputStream();
+                    ZipEntry entry = null;
+                    while ((entry = in.getNextEntry()) != null) {
+                        String name = entry.getName();
+                        if (name.endsWith(".txt") || name.endsWith(".csv")) {
+                            //Read the data
+                            byte[] data = new byte[4096];
+                            ByteArrayOutputStream bout = new ByteArrayOutputStream(256 * 1024);
+                            int count = 0;
+                            while ((count = in.read(data, 0, data.length)) != -1) {
+                                bout.write(data, 0, count);
+                            }
+                            //Write it into the workbook
+                            if (!nextRows.containsKey(name)) {
+                                nextRows.put(name, 0);
+                            }
+                            nextRows.put(name, handleCSVFile(name, new ByteArrayInputStream(bout.toByteArray()), nextRows.get(name)));
+                        }
+                    }
+                }
+            }
             //Save the output workbook
             saveOutputWorkbook();
+            JOptionPane.showMessageDialog(this, "Die Berechnung wurde erfolgreich abgeschlossen!", "Erfolg", JOptionPane.INFORMATION_MESSAGE, SchoolalyzerFrame.okIcon);
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(this, "Fehler beim Schreiben des Dokuments: " + ex.getLocalizedMessage(), "Schreibfehler", JOptionPane.ERROR_MESSAGE, SchoolalyzerFrame.errorIcon);
         }
-        JOptionPane.showMessageDialog(this, "Die Berechnung wurde erfolgreich abgeschlossen!", "Erfolg", JOptionPane.INFORMATION_MESSAGE, SchoolalyzerFrame.okIcon);
 }//GEN-LAST:event_applyButtonActionPerformed
 
     /**

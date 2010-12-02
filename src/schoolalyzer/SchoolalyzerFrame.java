@@ -70,16 +70,13 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
     /**
      * Updates the JTree in the action list frame
      */
-    public void updateActionViewerTree()
-    {
+    public void updateActionViewerTree() {
         actionListFrame.update();
     }
 
     public void addCellAction(String sheetName, AbstractCellAction action) {
         actions.get(sheetName).add(action);
     }
-
-
 
     /**
      * Saves the output workbook in the output file
@@ -402,10 +399,10 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
         try {
             //Save the workbook
             saveOutputWorkbook();
+            JOptionPane.showMessageDialog(this, "Die Berechnung wurde erfolgreich abgeschlossen!", "Erfolg", JOptionPane.INFORMATION_MESSAGE, okIcon);
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(this, "Fehler beim Schreiben des Dokuments: " + ex.getLocalizedMessage(), "Schreibfehler", JOptionPane.ERROR_MESSAGE, errorIcon);
         }
-        JOptionPane.showMessageDialog(this, "Die Berechnung wurde erfolgreich abgeschlossen!", "Erfolg", JOptionPane.INFORMATION_MESSAGE, okIcon);
     }//GEN-LAST:event_applyButtonActionPerformed
 
     private void actionListButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actionListButtonActionPerformed
