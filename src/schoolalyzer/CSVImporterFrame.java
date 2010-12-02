@@ -95,6 +95,8 @@ public class CSVImporterFrame extends javax.swing.JFrame {
         outputStatusLabel = new javax.swing.JLabel();
         applyButton = new javax.swing.JButton();
 
+        setTitle("Schoolalyzer - CSV importieren");
+
         templateFileLabel.setText("Vorlage:");
 
         selectTemplateButton.setText("Auswählen");
@@ -105,7 +107,7 @@ public class CSVImporterFrame extends javax.swing.JFrame {
         });
 
         templateStatusLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/schoolalyzer/icons/dialog-information.png"))); // NOI18N
-        templateStatusLabel.setText("Bitte Vorlage laden!");
+        templateStatusLabel.setText("Leere Vorlage geladen");
 
         inputStatusLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/schoolalyzer/icons/dialog-information.png"))); // NOI18N
         inputStatusLabel.setText("Bitte Eingabedateien laden!");
@@ -143,31 +145,30 @@ public class CSVImporterFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(applyButton, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(inputFilesLabel)
                             .addComponent(templateFileLabel)
-                            .addGap(69, 69, 69)
-                            .addComponent(selectTemplateButton)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(templateStatusLabel))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(inputFilesLabel)
-                                .addComponent(outputFileLabel))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(selectOutputFileButton)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(outputStatusLabel))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(selectInputFilesButton)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(inputStatusLabel)))))
-                    .addComponent(applyButton, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addComponent(outputFileLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(selectTemplateButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(selectInputFilesButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(selectOutputFileButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(outputStatusLabel))
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(templateStatusLabel)
+                                    .addComponent(inputStatusLabel))))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -185,13 +186,13 @@ public class CSVImporterFrame extends javax.swing.JFrame {
                             .addComponent(inputFilesLabel)
                             .addComponent(selectInputFilesButton)
                             .addComponent(inputStatusLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(outputFileLabel)
-                            .addComponent(selectOutputFileButton)))
+                            .addComponent(selectOutputFileButton)
+                            .addComponent(outputFileLabel)))
                     .addComponent(outputStatusLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(applyButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, Short.MAX_VALUE)
+                .addComponent(applyButton, javax.swing.GroupLayout.PREFERRED_SIZE, 42, Short.MAX_VALUE)
                 .addContainerGap())
         );
 

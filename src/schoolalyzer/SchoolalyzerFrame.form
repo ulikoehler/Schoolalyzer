@@ -63,9 +63,9 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="1" attributes="0">
+          <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="1" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="actionListButton" min="-2" pref="218" max="-2" attributes="0"/>
                       <EmptySpace pref="879" max="32767" attributes="0"/>
@@ -73,28 +73,25 @@
                   </Group>
                   <Component id="tablesTabbedPane" alignment="0" pref="1221" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="templateFileLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="69" max="-2" attributes="0"/>
-                      <Component id="selectTemplateButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="templateStatusLabel" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="inputFilesLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="templateFileLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="outputFileLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="selectTemplateButton" alignment="0" min="-2" pref="91" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="selectOutputFileButton" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                  <Component id="selectInputFilesButton" alignment="1" max="32767" attributes="1"/>
+                                  <Component id="selectOutputFileButton" max="32767" attributes="1"/>
+                              </Group>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="outputStatusLabel" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="selectInputFilesButton" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="inputStatusLabel" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="outputStatusLabel" min="-2" max="-2" attributes="0"/>
+                                  <Component id="templateStatusLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="inputStatusLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
                       </Group>
                   </Group>
@@ -113,22 +110,18 @@
                   <Component id="templateStatusLabel" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="1" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="inputFilesLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="selectInputFilesButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="inputStatusLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="outputFileLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="selectOutputFileButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                  <Component id="outputStatusLabel" alignment="1" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="inputFilesLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="selectInputFilesButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="inputStatusLabel" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="selectOutputFileButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="outputFileLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="outputStatusLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
               <Component id="tablesTabbedPane" pref="720" max="32767" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
