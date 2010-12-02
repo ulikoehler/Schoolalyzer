@@ -328,6 +328,17 @@ public class CSVImporterFrame extends javax.swing.JFrame {
                             nextRows.put(name, handleCSVFile(name, new ByteArrayInputStream(bout.toByteArray()), nextRows.get(name)));
                         }
                     }
+                } else if (inputFile.getName().endsWith(".txt") || inputFile.getName().endsWith(".csv")) {
+                    String name = inputFile.getName();
+                    //Write it into the workbook
+                    if (!nextRows.containsKey(name)) {
+                        nextRows.put(name, 0);
+                    }
+                    nextRows.put(name, handleCSVFile(name, new BufferedInputStream(new FileInputStream(inputFile)), nextRows.get(name)));
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "Unbekannte Dateinamenserweiterung: " + inputFile.getName(), "Unbekannte Erweiterung", JOptionPane.ERROR_MESSAGE, SchoolalyzerFrame.errorIcon);
+
                 }
             }
             //Save the output workbook
