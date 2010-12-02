@@ -10,7 +10,6 @@
  */
 package schoolalyzer;
 
-import com.sun.xml.internal.ws.message.ByteArrayAttachment;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
@@ -32,10 +31,10 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 import schoolalyzer.parsers.CSVParser;
 import schoolalyzer.util.IteratorIterable;
 import schoolalyzer.util.POIUtil;
@@ -64,6 +63,11 @@ public class CSVImporterFrame extends javax.swing.JFrame {
     /** Creates new form CSVImporterFrame */
     public CSVImporterFrame() {
         initComponents();
+        setLocationRelativeTo(null);
+        //Set the current file chooser directory to the current directory
+        outputChooser.setCurrentDirectory(new File("."));
+        inputFileChooser.setCurrentDirectory(new File("."));
+        templateChooser.setCurrentDirectory(new File("."));
     }
 
     /**
@@ -96,6 +100,7 @@ public class CSVImporterFrame extends javax.swing.JFrame {
         applyButton = new javax.swing.JButton();
 
         setTitle("Schoolalyzer - CSV importieren");
+        setIconImage(SchoolalyzerFrame.piIcon.getImage());
 
         templateFileLabel.setText("Vorlage:");
 
@@ -145,30 +150,23 @@ public class CSVImporterFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(applyButton, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(inputFilesLabel)
-                            .addComponent(templateFileLabel)
-                            .addComponent(outputFileLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(selectTemplateButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(selectInputFilesButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(selectOutputFileButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(outputStatusLabel))
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(templateStatusLabel)
-                                    .addComponent(inputStatusLabel))))))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(inputFilesLabel)
+                    .addComponent(templateFileLabel)
+                    .addComponent(outputFileLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(selectOutputFileButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(selectInputFilesButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(selectTemplateButton, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(applyButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE)
+                    .addComponent(inputStatusLabel)
+                    .addComponent(templateStatusLabel)
+                    .addComponent(outputStatusLabel))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -180,16 +178,14 @@ public class CSVImporterFrame extends javax.swing.JFrame {
                     .addComponent(selectTemplateButton)
                     .addComponent(templateStatusLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(inputFilesLabel)
-                            .addComponent(selectInputFilesButton)
-                            .addComponent(inputStatusLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(selectOutputFileButton)
-                            .addComponent(outputFileLabel)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(inputFilesLabel)
+                    .addComponent(selectInputFilesButton)
+                    .addComponent(inputStatusLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(selectOutputFileButton)
+                    .addComponent(outputFileLabel)
                     .addComponent(outputStatusLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(applyButton, javax.swing.GroupLayout.PREFERRED_SIZE, 42, Short.MAX_VALUE)
@@ -239,8 +235,7 @@ public class CSVImporterFrame extends javax.swing.JFrame {
             return; //No files to be processed
         }
         //Reset the input workbook data
-        inputFiles.clear();
-        inputFiles.addAll(Arrays.asList(dataFiles));
+        inputFiles = Arrays.asList(dataFiles);
         //Set the status message
         inputsSet = true;
         inputStatusLabel.setIcon(SchoolalyzerFrame.okIcon);
@@ -275,14 +270,21 @@ public class CSVImporterFrame extends javax.swing.JFrame {
         //Get the sheet or create it if it doesn't exist
         Sheet sheet = outputWorkbook.getSheet(name);
         if (sheet == null) {
-            sheet = outputWorkbook.createSheet();
+            sheet = outputWorkbook.createSheet(name);
         }
         //Get the first row to insert into
         CSVParser parser = new CSVParser(in, "\"", ",");
         for (Vector<String> data : new IteratorIterable<Vector<String>>(parser.getDataIterator())) {
             Row row = sheet.getRow(nextRow);
+            if (row == null) {
+                row = sheet.createRow(nextRow);
+            }
             for (int i = 0; i < data.size(); i++) {
-                row.getCell(i).setCellValue(data.get(i));
+                Cell cell = row.getCell(i);
+                if (cell == null) {
+                    cell = row.createCell(i);
+                }
+                cell.setCellValue(data.get(i));
             }
             nextRow++;
         }

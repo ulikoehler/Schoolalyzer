@@ -91,6 +91,7 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
     /** Creates new form SchoolalzyerFrame */
     public SchoolalyzerFrame() {
         initComponents();
+        setLocationRelativeTo(null);
         //Set the current file chooser directory to the current directory
         outputChooser.setCurrentDirectory(new File("."));
         inputFileChooser.setCurrentDirectory(new File("."));
@@ -195,6 +196,7 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
 
         extrasMenu.setText("Extras");
 
+        importCSVMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.CTRL_MASK));
         importCSVMenuItem.setText("CSV-Importer");
         importCSVMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -225,17 +227,15 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
                             .addComponent(templateFileLabel)
                             .addComponent(outputFileLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(selectTemplateButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(selectInputFilesButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(selectOutputFileButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(selectTemplateButton, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(selectInputFilesButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(selectOutputFileButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(outputStatusLabel)
-                                    .addComponent(templateStatusLabel)
-                                    .addComponent(inputStatusLabel))))))
+                            .addComponent(inputStatusLabel)
+                            .addComponent(templateStatusLabel)
+                            .addComponent(outputStatusLabel))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -449,7 +449,7 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) throws Exception {
-        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
