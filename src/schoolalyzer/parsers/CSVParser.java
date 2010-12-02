@@ -11,8 +11,6 @@ import java.io.InputStreamReader;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import schoolalyzer.parsers.AbstractParser;
-import schoolalyzer.parsers.AbstractParser.AbstractParserIterator;
 
 /**
  *
