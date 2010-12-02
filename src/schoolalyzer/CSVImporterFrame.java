@@ -30,10 +30,12 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import schoolalyzer.parsers.CSVParser;
 import schoolalyzer.util.IteratorIterable;
 import schoolalyzer.util.POIUtil;
@@ -92,8 +94,6 @@ public class CSVImporterFrame extends javax.swing.JFrame {
         selectOutputFileButton = new javax.swing.JButton();
         outputStatusLabel = new javax.swing.JLabel();
         applyButton = new javax.swing.JButton();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         templateFileLabel.setText("Vorlage:");
 
@@ -290,6 +290,17 @@ public class CSVImporterFrame extends javax.swing.JFrame {
 
     private void applyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyButtonActionPerformed
 
+        if (!templateSet) {
+            outputWorkbook = new HSSFWorkbook();
+        }
+        if (!outputSet) {
+            JOptionPane.showMessageDialog(this, "Bitte Ausgabedatei setzen!", "Ausgabedatei nicht gesetzt", JOptionPane.ERROR_MESSAGE, SchoolalyzerFrame.errorIcon);
+            return;
+        }
+        if (!inputsSet) {
+            JOptionPane.showMessageDialog(this, "Bitte Eingabedateien laden!", "Eingabedateien nicht geladen", JOptionPane.ERROR_MESSAGE, SchoolalyzerFrame.errorIcon);
+            return;
+        }
         try {
             HashMap<String, Integer> nextRows = new HashMap<String, Integer>(); //Maps the sheet name to the next row number
             for (File inputFile : inputFiles) {

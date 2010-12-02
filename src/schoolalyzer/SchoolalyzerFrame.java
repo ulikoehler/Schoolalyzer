@@ -55,6 +55,7 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
     boolean outputSet = false;
     //Frames
     private ActionListFrame actionListFrame = new ActionListFrame();
+    private CSVImporterFrame csvImporterFrame = new CSVImporterFrame();
 
     public HashMap<String, LinkedList<AbstractCellAction>> getActions() {
         return actions;
@@ -119,6 +120,11 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
         inputStatusLabel = new javax.swing.JLabel();
         applyButton = new javax.swing.JButton();
         actionListButton = new javax.swing.JButton();
+        menuBar = new javax.swing.JMenuBar();
+        fileMenu = new javax.swing.JMenu();
+        exitMenuItem = new javax.swing.JMenuItem();
+        extrasMenu = new javax.swing.JMenu();
+        importCSVMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Schoolalyzer");
@@ -175,6 +181,32 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
             }
         });
 
+        fileMenu.setText("Datei");
+
+        exitMenuItem.setText("Beenden");
+        exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exitMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(exitMenuItem);
+
+        menuBar.add(fileMenu);
+
+        extrasMenu.setText("Extras");
+
+        importCSVMenuItem.setText("CSV-Importer");
+        importCSVMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                importCSVMenuItemActionPerformed(evt);
+            }
+        });
+        extrasMenu.add(importCSVMenuItem);
+
+        menuBar.add(extrasMenu);
+
+        setJMenuBar(menuBar);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -184,7 +216,7 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(actionListButton, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 858, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 879, Short.MAX_VALUE)
                         .addComponent(applyButton))
                     .addComponent(tablesTabbedPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 1221, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
@@ -230,7 +262,7 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
                             .addComponent(selectOutputFileButton)))
                     .addComponent(outputStatusLabel))
                 .addGap(14, 14, 14)
-                .addComponent(tablesTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 747, Short.MAX_VALUE)
+                .addComponent(tablesTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 720, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(actionListButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -410,6 +442,14 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
         actionListFrame.setVisible(true);
     }//GEN-LAST:event_actionListButtonActionPerformed
 
+    private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_exitMenuItemActionPerformed
+
+    private void importCSVMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importCSVMenuItemActionPerformed
+        csvImporterFrame.setVisible(true);
+    }//GEN-LAST:event_importCSVMenuItemActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -425,8 +465,13 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton actionListButton;
     private javax.swing.JButton applyButton;
+    private javax.swing.JMenuItem exitMenuItem;
+    private javax.swing.JMenu extrasMenu;
+    private javax.swing.JMenu fileMenu;
+    private javax.swing.JMenuItem importCSVMenuItem;
     private javax.swing.JLabel inputFilesLabel;
     private javax.swing.JLabel inputStatusLabel;
+    private javax.swing.JMenuBar menuBar;
     private javax.swing.JLabel outputFileLabel;
     private javax.swing.JLabel outputStatusLabel;
     private javax.swing.JButton selectInputFilesButton;
