@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package schoolalyzer;
+package schoolalyzer.ui;
 
+import schoolalyzer.util.POIUtil;
 import javax.swing.table.AbstractTableModel;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;

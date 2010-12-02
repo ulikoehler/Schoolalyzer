@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package schoolalyzer;
+package schoolalyzer.ui;
 
+import schoolalyzer.util.POIUtil;
 import java.awt.Color;
 import java.awt.Component;
 import javax.swing.JLabel;

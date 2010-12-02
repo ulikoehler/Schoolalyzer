@@ -7,19 +7,23 @@ package schoolalyzer.actions;
 import java.util.List;
 
 /**
- * Action summing cell values
+ *
  * @author uli
  */
-public class SumCellAction extends AbstractCellAction {
+public class AverageCellAction extends AbstractCellAction {
 
-    public SumCellAction(int row, int column) {
+    public AverageCellAction(int row, int column) {
         super(row, column);
+    }
+
+    @Override
+    public String getActionName() {
+        return "Mittelwert (arithmetisch)";
     }
 
     @Override
     protected CellValueType getResultType() {
         return CellValueType.DOUBLE;
-
     }
 
     @Override
@@ -30,14 +34,10 @@ public class SumCellAction extends AbstractCellAction {
     @Override
     protected Object doAction(List<? extends Object> inputValues) {
         double sum = 0;
+        int count = 0;
         for (Object o : inputValues) {
             sum += (Double) o;
         }
-        return sum;
-    }
-
-    @Override
-    public String getActionName() {
-        return "Summierung";
+        return sum / count;
     }
 }

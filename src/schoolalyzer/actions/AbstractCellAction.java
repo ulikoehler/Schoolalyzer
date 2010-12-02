@@ -98,6 +98,11 @@ public abstract class AbstractCellAction {
     }
 
     /**
+     * @return The ame of this action
+     */
+    public abstract String getActionName();
+
+    /**
      * Must be implemented by an action implementation to tell
      * this class what class is returned by doAction.
      * @return The type of the result this action implementation returns.

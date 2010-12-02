@@ -5,6 +5,7 @@
  */
 package schoolalyzer;
 
+import schoolalyzer.ui.ExcelTablePanel;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -32,7 +33,7 @@ import schoolalyzer.actions.AbstractCellAction;
  *
  * @author uli
  */
-public class SchoolalzyerFrame extends javax.swing.JFrame {
+public class SchoolalyzerFrame extends javax.swing.JFrame {
 
     private HashMap<Workbook, String> inputWorkbooks = new HashMap<Workbook, String>(); //Maps the worbook to the filename (not path!) it was loaded from
     private Workbook outputWorkbook = null;
@@ -50,11 +51,18 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
     //Actions
     private HashMap<String, LinkedList<AbstractCellAction>> actions = new HashMap<String, LinkedList<AbstractCellAction>>();
     //Logging
-    private static final Logger logger = Logger.getLogger(SchoolalzyerFrame.class.getName());
+    private static final Logger logger = Logger.getLogger(SchoolalyzerFrame.class.getName());
     //Status variables
     boolean templateSet = false;
     boolean inputsSet = false;
     boolean outputSet = false;
+    //Frames
+    private ActionListFrame actionListFrame = new ActionListFrame();
+
+    public HashMap<String, LinkedList<AbstractCellAction>> getActions() {
+        return actions;
+    }
+
 
     public void addCellAction(String sheetName, AbstractCellAction action) {
         actions.get(sheetName).add(action);
@@ -77,7 +85,7 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
     }
 
     /** Creates new form SchoolalzyerFrame */
-    public SchoolalzyerFrame() {
+    public SchoolalyzerFrame() {
         initComponents();
         //Set the current file chooser directory to the current directory
         outputChooser.setCurrentDirectory(new File("."));
@@ -85,6 +93,8 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
         templateChooser.setCurrentDirectory(new File("."));
         //Set the window icon
         setIconImage(piIcon.getImage());
+        //Initialize the child frames
+        actionListFrame.setParentFrame(this);
     }
 
     /** This method is called from within the constructor to
@@ -107,6 +117,7 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
         outputStatusLabel = new javax.swing.JLabel();
         inputStatusLabel = new javax.swing.JLabel();
         applyButton = new javax.swing.JButton();
+        actionListButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Schoolalyzer");
@@ -155,6 +166,13 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
             }
         });
 
+        actionListButton.setText("Liste der Berechnungen");
+        actionListButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                actionListButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -162,8 +180,11 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(applyButton)
-                    .addComponent(tablesTabbedPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 977, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(actionListButton, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 858, Short.MAX_VALUE)
+                        .addComponent(applyButton))
+                    .addComponent(tablesTabbedPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 1221, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addComponent(templateFileLabel)
                         .addGap(69, 69, 69)
@@ -207,9 +228,11 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
                             .addComponent(selectOutputFileButton)))
                     .addComponent(outputStatusLabel))
                 .addGap(14, 14, 14)
-                .addComponent(tablesTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
+                .addComponent(tablesTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 747, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(applyButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(actionListButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(applyButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -365,8 +388,7 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
                 }
                 try {
                     action.apply(sheets, outputWorkbook.getSheet(entry.getKey()));
-                }
-                catch(CellTypeException ex) {
+                } catch (CellTypeException ex) {
                     JOptionPane.showMessageDialog(this, "Fehler in der Datei '" + inputWorkbooks.get(sheetToWorkbook.get(ex.getSheet())) + "' (Blatt '" + entry.getKey() + "') :\n" + ex.getUnderlyingCauseLocalizedMessage(), "Datenfehler", JOptionPane.ERROR_MESSAGE, errorIcon);
                     return;
                 }
@@ -381,6 +403,10 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "Die Berechnung wurde erfolgreich abgeschlossen!", "Erfolg", JOptionPane.INFORMATION_MESSAGE, okIcon);
     }//GEN-LAST:event_applyButtonActionPerformed
 
+    private void actionListButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actionListButtonActionPerformed
+        actionListFrame.setVisible(true);
+    }//GEN-LAST:event_actionListButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -389,11 +415,12 @@ public class SchoolalzyerFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                new SchoolalzyerFrame().setVisible(true);
+                new SchoolalyzerFrame().setVisible(true);
             }
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton actionListButton;
     private javax.swing.JButton applyButton;
     private javax.swing.JLabel inputFilesLabel;
     private javax.swing.JLabel inputStatusLabel;

@@ -8,8 +8,9 @@
  *
  * Created on 26.11.2010, 20:34:52
  */
-package schoolalyzer;
+package schoolalyzer.ui;
 
+import schoolalyzer.ui.ExcelTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;
@@ -17,6 +18,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import org.apache.poi.ss.usermodel.Sheet;
+import schoolalyzer.SchoolalyzerFrame;
 import schoolalyzer.actions.ActionManager;
 
 /**
@@ -26,14 +28,14 @@ import schoolalyzer.actions.ActionManager;
 public class ExcelTablePanel extends javax.swing.JPanel {
 
     private Sheet sheet = null;
-    private SchoolalzyerFrame parentFrame = null;
+    private SchoolalyzerFrame parentFrame = null;
 
     /** Creates new form ExcelTablePanel */
     public ExcelTablePanel() {
         initComponents();
     }
 
-    public void setParentFrame(SchoolalzyerFrame parentFrame) {
+    public void setParentFrame(SchoolalyzerFrame parentFrame) {
         this.parentFrame = parentFrame;
     }
 
