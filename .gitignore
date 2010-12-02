@@ -1,5 +1,4 @@
 build
 dist
 *.class
-*.jar
 testfiles/out.xls

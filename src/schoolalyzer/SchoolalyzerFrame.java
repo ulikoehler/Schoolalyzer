@@ -7,16 +7,12 @@ package schoolalyzer;
 
 import java.util.logging.Level;
 import schoolalyzer.ui.ExcelTablePanel;
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -27,8 +23,8 @@ import javax.swing.UIManager;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 import schoolalyzer.actions.AbstractCellAction;
+import schoolalyzer.util.POIUtil;
 
 /**
  *
@@ -83,12 +79,7 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
         actions.get(sheetName).add(action);
     }
 
-    private Workbook loadWorkbook(File file) throws IOException, InvalidFormatException {
-        InputStream in = new BufferedInputStream(new FileInputStream(file));
-        Workbook workbook = WorkbookFactory.create(in);
-        in.close();
-        return workbook;
-    }
+
 
     /**
      * Saves the output workbook in the output file
@@ -269,7 +260,7 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
         //Open all the files as Workbooks
         for (File file : dataFiles) {
             try {
-                inputWorkbooks.put(loadWorkbook(file), file.getName());
+                inputWorkbooks.put(POIUtil.loadWorkbook(file), file.getName());
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(this, "Eingabefehler beim Lesen der Datei " + file.getName(), "Eingabefehler", JOptionPane.ERROR_MESSAGE, errorIcon);
                 inputStatusLabel.setIcon(errorIcon);
@@ -356,7 +347,7 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
         templateStatusLabel.setIcon(informationIcon);
         //Load the template
         try {
-            outputWorkbook = loadWorkbook(templateFile); //There is no separate templateWorkbook variable because the only use of the template file is to provide empty fields for the output
+            outputWorkbook = POIUtil.loadWorkbook(templateFile); //There is no separate templateWorkbook variable because the only use of the template file is to provide empty fields for the output
             templateStatusLabel.setIcon(okIcon);
             templateStatusLabel.setText("Vorlage erfolgreich geladen");
             templateSet = true;

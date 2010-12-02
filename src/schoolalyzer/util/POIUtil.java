@@ -5,17 +5,39 @@
 package schoolalyzer.util;
 
 import java.awt.Color;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 /**
  *
  * @author uli
  */
 public class POIUtil {
+
+    /**
+     * Loads a Workbook from a file
+     * @param file The file to load the workbook from
+     * @return The workbook loaded from the file
+     * @throws IOException
+     * @throws InvalidFormatException
+     */
+    public static Workbook loadWorkbook(File file) throws IOException, InvalidFormatException {
+        InputStream in = new BufferedInputStream(new FileInputStream(file));
+        Workbook workbook = WorkbookFactory.create(in);
+        in.close();
+        return workbook;
+    }
 
     /**
      * Returns a cell value as a String no matter of the cell type
