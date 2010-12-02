@@ -5,6 +5,7 @@
  */
 package schoolalyzer;
 
+import java.util.logging.Level;
 import schoolalyzer.ui.ExcelTablePanel;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -39,11 +40,11 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
     private Workbook outputWorkbook = null;
     private File outputWorkbookFile = null;
     //Icons
-    private ImageIcon informationIcon = new ImageIcon(getClass().getResource("/schoolalyzer/icons/dialog-information.png"));
-    private ImageIcon warningIcon = new ImageIcon(getClass().getResource("/schoolalyzer/icons/dialog-warning.png"));
-    private ImageIcon errorIcon = new ImageIcon(getClass().getResource("/schoolalyzer/icons/dialog-error.png"));
-    private ImageIcon okIcon = new ImageIcon(getClass().getResource("/schoolalyzer/icons/task-complete.png"));
-    private ImageIcon piIcon = new ImageIcon(getClass().getResource("/schoolalyzer/icons/preferences-kcalc-constants.png"));
+    public static ImageIcon informationIcon = new ImageIcon(SchoolalyzerFrame.class.getResource("/schoolalyzer/icons/dialog-information.png"));
+    public static ImageIcon warningIcon = new ImageIcon(SchoolalyzerFrame.class.getResource("/schoolalyzer/icons/dialog-warning.png"));
+    public static ImageIcon errorIcon = new ImageIcon(SchoolalyzerFrame.class.getResource("/schoolalyzer/icons/dialog-error.png"));
+    public static ImageIcon okIcon = new ImageIcon(SchoolalyzerFrame.class.getResource("/schoolalyzer/icons/task-complete.png"));
+    public static ImageIcon piIcon = new ImageIcon(SchoolalyzerFrame.class.getResource("/schoolalyzer/icons/preferences-kcalc-constants.png"));
     //File choosers
     private JFileChooser outputChooser = new JFileChooser();
     private JFileChooser templateChooser = new JFileChooser();
@@ -63,6 +64,20 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
         return actions;
     }
 
+    public void removeCellAction(String sheetName, AbstractCellAction action) {
+        LinkedList<AbstractCellAction> actionList = actions.get(sheetName);
+        if (!actionList.remove(action)) {
+            logger.log(Level.SEVERE, "The action couldn''t be removed from sheet ''{0}''", sheetName);
+        }
+    }
+
+    /**
+     * Updates the JTree in the action list frame
+     */
+    public void updateActionViewerTree()
+    {
+        actionListFrame.update();
+    }
 
     public void addCellAction(String sheetName, AbstractCellAction action) {
         actions.get(sheetName).add(action);
@@ -91,8 +106,6 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
         outputChooser.setCurrentDirectory(new File("."));
         inputFileChooser.setCurrentDirectory(new File("."));
         templateChooser.setCurrentDirectory(new File("."));
-        //Set the window icon
-        setIconImage(piIcon.getImage());
         //Initialize the child frames
         actionListFrame.setParentFrame(this);
     }
@@ -121,6 +134,7 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Schoolalyzer");
+        setIconImage(piIcon.getImage());
 
         inputFilesLabel.setText("Eingabedateien:");
 
@@ -404,6 +418,7 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_applyButtonActionPerformed
 
     private void actionListButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actionListButtonActionPerformed
+        actionListFrame.update();
         actionListFrame.setVisible(true);
     }//GEN-LAST:event_actionListButtonActionPerformed
 

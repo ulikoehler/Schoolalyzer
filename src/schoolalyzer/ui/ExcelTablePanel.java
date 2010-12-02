@@ -58,6 +58,7 @@ public class ExcelTablePanel extends javax.swing.JPanel {
                     for (int selectedRow : table.getSelectedRows()) {
                         for (int selectedColumn : table.getSelectedColumns()) {
                             parentFrame.addCellAction(finalSheet.getSheetName(), ActionManager.getInstance().getActionInstance(finalName, selectedRow, selectedColumn));
+                            parentFrame.updateActionViewerTree();
                         }
                     }
                 }

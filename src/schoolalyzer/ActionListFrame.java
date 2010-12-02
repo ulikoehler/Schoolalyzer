@@ -10,12 +10,17 @@
  */
 package schoolalyzer;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import schoolalyzer.util.Tuple;
 import java.util.LinkedList;
 import java.util.Map;
-import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 import schoolalyzer.actions.AbstractCellAction;
+import schoolalyzer.util.SchoolalyzerUtil;
 
 /**
  *
@@ -28,11 +33,35 @@ public class ActionListFrame extends javax.swing.JFrame {
     /** Creates new form actionListFrame */
     public ActionListFrame() {
         initComponents();
+        setLocationRelativeTo(null);
+    }
+
+    public void update() {
         tree.setModel(getModel());
     }
 
     public void setParentFrame(SchoolalyzerFrame parentFrame) {
         this.parentFrame = parentFrame;
+        tree.setModel(getModel());
+        //Add the popup menu
+        JPopupMenu treePopupMenu = new JPopupMenu();
+        JMenuItem deleteMenuItem = new JMenuItem("Löschen");
+        final SchoolalyzerFrame finalParent = parentFrame;
+        deleteMenuItem.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                for (TreePath path : tree.getSelectionPaths()) {
+                    DataMutableTreeNode node = (DataMutableTreeNode) path.getLastPathComponent();
+                    if (node.getType().equals("action")) {
+                        Tuple<String, AbstractCellAction> tuple = (Tuple<String, AbstractCellAction>) node.getData();
+                        finalParent.removeCellAction(tuple.getLeft(), tuple.getRight());
+                        update();
+                    }
+                }
+            }
+        });
+        treePopupMenu.add(deleteMenuItem);
+        tree.setComponentPopupMenu(treePopupMenu);
     }
 
     private DefaultTreeModel getModel() {
@@ -41,11 +70,13 @@ public class ActionListFrame extends javax.swing.JFrame {
             DataMutableTreeNode sheetNode = new DataMutableTreeNode(entry.getKey());
             sheetNode.setType("sheet");
             for (AbstractCellAction action : entry.getValue()) {
-                DataMutableTreeNode actionNode = new DataMutableTreeNode(action.getActionName());
+                String label = String.format("%s: %s%d", action.getActionName(), SchoolalyzerUtil.getColumnName(action.getColumn()), action.getRow());
+                DataMutableTreeNode actionNode = new DataMutableTreeNode(label);
                 actionNode.setType("action");
                 actionNode.setData(new Tuple<String, AbstractCellAction>(entry.getKey(), action));
                 sheetNode.add(actionNode);
             }
+            rootNode.add(sheetNode);
         }
         return new DefaultTreeModel(rootNode);
     }
@@ -62,13 +93,22 @@ public class ActionListFrame extends javax.swing.JFrame {
         treeScrollPane = new javax.swing.JScrollPane();
         tree = new javax.swing.JTree();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Schoolalyzer - Berechnungen");
-        getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
+        setIconImage(SchoolalyzerFrame.piIcon.getImage());
+        setLocationByPlatform(true);
 
         treeScrollPane.setViewportView(tree);
 
-        getContentPane().add(treeScrollPane);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(treeScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 454, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(treeScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE)
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
