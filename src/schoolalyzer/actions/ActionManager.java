@@ -27,6 +27,8 @@ public class ActionManager {
         //Register the default actions
         actions.put("Summieren", SumCellAction.class);
         actions.put("Mittelwert (arithmetisch)", AverageCellAction.class);
+        actions.put("Produkt", ProductCellAction.class);
+        actions.put("Anzahl der Eingabedokumente", CountCellAction.class);
     }
 
     public AbstractCellAction getActionInstance(String name, int row, int column) {
