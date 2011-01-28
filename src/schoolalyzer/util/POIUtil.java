@@ -167,7 +167,6 @@ public class POIUtil {
     public static boolean isEmpty(Sheet sheet, int rowIndex, int columnIndex) {
         Cell cell = getCellSafe(sheet, rowIndex, columnIndex);
         if (cell == null) { //Return true if the cell does not exist
-            System.out.println("Cell null" + rowIndex + columnIndex);
             return true;
         }
         return isEmpty(cell);

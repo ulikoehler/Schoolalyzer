@@ -212,7 +212,7 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
         //Get the output sheet
         Sheet outputSheet = outputWorkbook.createSheet(); //Always get first sheet
         //Read the start and the stop row
-        int sheetNum = sheetIndexSpinner.getIntValue();
+        int sheetNum = sheetIndexSpinner.getIntValue() - 1;
         int startRow = startRowSpinner.getIntValue() - 1; //-1: 1-based must be converted to 0-based
         int startCol = POIUtil.getColumnNumber(((SpinnerListModel) startColSpinner.getModel()).getValue().toString());
         int currentOutputColIndex = 0;
@@ -223,7 +223,6 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
             while (true) { //Iterate over all rows
                 //If the first column to process (=startCol) in this row is empty
                 if (POIUtil.isEmpty(inputSheet, currentInputRowIndex, startCol)) {
-                        System.out.println("OBreaking on " + currentInputRowIndex + "   " + startCol);
                     break;
                 }
                 currentOutputColIndex = 0;
@@ -231,12 +230,10 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
                 while (true) //Iterate over the columns in the current row until one is empty
                 {
                     if (POIUtil.isEmpty(inputSheet, currentInputRowIndex, currentInputColIndex)) {
-                        System.out.println("Breaking on " + currentInputRowIndex + "   " + currentInputColIndex);
                         break;
                     }
                     //The cell is not empty --> copy the value into the output document
                     String cellValue = POIUtil.getStringCellValueSafe(inputSheet, currentInputRowIndex, currentInputColIndex);
-                    System.out.println(String.format("%d, %d: %s", currentInputRowIndex, currentOutputColIndex, cellValue));
                     POIUtil.setCellValueSafe(outputSheet, currentOutputRowIndex, currentOutputColIndex, cellValue);
                     currentInputColIndex++;
                     currentOutputColIndex++;
