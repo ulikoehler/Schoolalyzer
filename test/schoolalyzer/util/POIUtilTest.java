@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package schoolalyzer.util;
 
 import org.junit.After;
@@ -49,6 +48,7 @@ public class POIUtilTest {
         assertEquals("AB", POIUtil.generateColumnName(27));
         assertEquals("BA", POIUtil.generateColumnName(52));
     }
+
     /**
      * Test of generateColumnName method, of class POIUtil.
      */

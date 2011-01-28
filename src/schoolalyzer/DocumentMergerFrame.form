@@ -23,48 +23,39 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
+                  <Component id="okButton" alignment="1" pref="559" max="32767" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="inputFilesLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="outputFileLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="sheetIndexLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="startRowLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Group type="102" attributes="1">
-                              <Component id="startLineLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="55" max="-2" attributes="0"/>
-                              <Component id="startLineSpinner" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" alignment="0" groupAlignment="1" attributes="0">
+                              <Component id="numberSpinner1" pref="437" max="32767" attributes="0"/>
+                              <Component id="startRowSpinner" pref="437" max="32767" attributes="0"/>
                           </Group>
+                          <Component id="startColSpinner" alignment="0" min="-2" pref="437" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="inputFilesLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="outputFileLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="selectOutputFileButton" alignment="0" max="32767" attributes="1"/>
+                                  <Component id="selectInputFilesButton" alignment="0" min="-2" max="-2" attributes="1"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="startColSpinner" alignment="0" min="-2" pref="437" max="-2" attributes="0"/>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                          <Component id="selectOutputFileButton" alignment="0" max="32767" attributes="1"/>
-                                          <Component id="selectInputFilesButton" alignment="0" min="-2" max="-2" attributes="1"/>
-                                      </Group>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="inputStatusLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="outputStatusLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                  </Group>
+                                  <Component id="inputStatusLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="outputStatusLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
-                      <EmptySpace pref="20" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                   </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="-2" pref="199" max="-2" attributes="0"/>
-                      <Component id="okButton" pref="372" max="32767" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="startColLabel" min="-2" max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="startColLabel" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -72,11 +63,16 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
+          <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="startLineLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="startLineSpinner" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="sheetIndexLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="numberSpinner1" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="startRowLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="startRowSpinner" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -96,8 +92,8 @@
                   <Component id="outputStatusLabel" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="okButton" max="32767" attributes="1"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <Component id="okButton" min="-2" max="-2" attributes="1"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -156,12 +152,15 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="selectOutputFileButtonActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JLabel" name="startLineLabel">
+    <Component class="javax.swing.JLabel" name="startRowLabel">
       <Properties>
         <Property name="text" type="java.lang.String" value="Ab Zeile:"/>
       </Properties>
     </Component>
-    <Component class="schoolalyzer.ui.NumberSpinner" name="startLineSpinner">
+    <Component class="schoolalyzer.ui.NumberSpinner" name="startRowSpinner">
+      <Properties>
+        <Property name="intValue" type="int" value="1"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="startColLabel">
       <Properties>
@@ -173,6 +172,19 @@
         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="new SpinnerColumnNameModel()" type="code"/>
         </Property>
+        <Property name="value" type="java.lang.Object" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="&quot;A&quot;" type="code"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="sheetIndexLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Blattnummer:"/>
+      </Properties>
+    </Component>
+    <Component class="schoolalyzer.ui.NumberSpinner" name="numberSpinner1">
+      <Properties>
+        <Property name="intValue" type="int" value="1"/>
       </Properties>
     </Component>
   </SubComponents>

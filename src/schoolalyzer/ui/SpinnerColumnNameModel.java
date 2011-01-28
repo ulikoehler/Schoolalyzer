@@ -16,6 +16,10 @@ public class SpinnerColumnNameModel extends AbstractSpinnerModel {
 
     public int index = 0; //current 0-based column index
 
+    public int getColumnIndex() {
+        return index;
+    }
+
     public Object getValue() {
         return POIUtil.generateColumnName(index);
     }

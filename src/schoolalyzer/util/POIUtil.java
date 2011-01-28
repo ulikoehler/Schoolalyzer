@@ -84,7 +84,6 @@ public class POIUtil {
         } else if (colName.length() == 2) {
             char c1 = colName.charAt(0);
             char c2 = colName.charAt(1);
-            System.out.println(c1 + "   " + c2);
             int c1Index = findInArray(c1, upperLetters) + 1; //+1 needed because of the upperLetter.length col names before the two-letter ones begin
             int c2Index = findInArray(c2, upperLetters);
             if (c1Index == -1 || c2Index == -1) {

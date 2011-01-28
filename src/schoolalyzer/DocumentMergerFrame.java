@@ -30,6 +30,7 @@ import schoolalyzer.util.POIUtil;
  * @author uli
  */
 public class DocumentMergerFrame extends javax.swing.JFrame {
+
     //File choosers
     private JFileChooser outputChooser = new JFileChooser();
     private JFileChooser inputFileChooser = new JFileChooser();
@@ -73,10 +74,12 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
         inputStatusLabel = new javax.swing.JLabel();
         outputStatusLabel = new javax.swing.JLabel();
         selectOutputFileButton = new javax.swing.JButton();
-        startLineLabel = new javax.swing.JLabel();
-        startLineSpinner = new schoolalyzer.ui.NumberSpinner();
+        startRowLabel = new javax.swing.JLabel();
+        startRowSpinner = new schoolalyzer.ui.NumberSpinner();
         startColLabel = new javax.swing.JLabel();
         startColSpinner = new javax.swing.JSpinner();
+        sheetIndexLabel = new javax.swing.JLabel();
+        numberSpinner1 = new schoolalyzer.ui.NumberSpinner();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Schoolalyzer - Dokumente zusammenführen");
@@ -113,47 +116,49 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
             }
         });
 
-        startLineLabel.setText("Ab Zeile:");
+        startRowLabel.setText("Ab Zeile:");
+
+        startRowSpinner.setIntValue(1);
 
         startColLabel.setText("Ab Spalte:");
 
         startColSpinner.setModel(new SpinnerColumnNameModel());
+        startColSpinner.setValue("A");
+
+        sheetIndexLabel.setText("Blattnummer:");
+
+        numberSpinner1.setIntValue(1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(okButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 559, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(inputFilesLabel)
+                            .addComponent(outputFileLabel)
+                            .addComponent(sheetIndexLabel)
+                            .addComponent(startRowLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(numberSpinner1, javax.swing.GroupLayout.DEFAULT_SIZE, 437, Short.MAX_VALUE)
+                                .addComponent(startRowSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 437, Short.MAX_VALUE))
+                            .addComponent(startColSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(startLineLabel)
-                                .addGap(55, 55, 55)
-                                .addComponent(startLineSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(inputFilesLabel)
-                                    .addComponent(outputFileLabel))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(selectOutputFileButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(selectInputFilesButton))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(startColSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(selectOutputFileButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(selectInputFilesButton))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(inputStatusLabel)
-                                            .addComponent(outputStatusLabel))))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(199, 199, 199)
-                        .addComponent(okButton, javax.swing.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(startColLabel)))
+                                    .addComponent(inputStatusLabel)
+                                    .addComponent(outputStatusLabel))))
+                        .addGap(20, 20, 20))
+                    .addComponent(startColLabel))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -161,8 +166,12 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(startLineLabel)
-                    .addComponent(startLineSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(sheetIndexLabel)
+                    .addComponent(numberSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(startRowLabel)
+                    .addComponent(startRowSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(startColLabel)
@@ -178,8 +187,8 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
                     .addComponent(outputFileLabel)
                     .addComponent(outputStatusLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(okButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(okButton)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -196,8 +205,15 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Bitte Eingabedateien laden!", "Eingabedateien nicht geladen", JOptionPane.ERROR_MESSAGE, SchoolalyzerFrame.errorIcon);
             return;
         }
-        int nextRow = 0;
+        //Read the start and the stop row 
+        int currentRow = startRowSpinner.getIntValue() - 1; //-1: 1-based must be converted to 0-based
+        int currentCol = ((SpinnerColumnNameModel) startColSpinner.getModel()).getColumnIndex();
         for (Workbook inputWorkbook : inputWorkbooks) {
+            while(true)
+            {
+                Row row = inputWorkbook.get
+                currentRow++;
+            }
         }
         try {
             //Save the output workbook
@@ -228,11 +244,13 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
         } catch (IOException ex) {
             inputStatusLabel.setIcon(SchoolalyzerFrame.errorIcon);
             inputStatusLabel.setText("Eingabefehler - bitte Vorlage erneut laden!");
+            inputsSet = false;
             return;
         } catch (InvalidFormatException ex) {
             JOptionPane.showMessageDialog(this, "Fehler beim Lesen der Vorlage: Das Dateiformat wird nicht unterstützt: " + ex.getLocalizedMessage(), "Format nicht unterstützt", JOptionPane.ERROR_MESSAGE, SchoolalyzerFrame.errorIcon);
             inputStatusLabel.setIcon(SchoolalyzerFrame.errorIcon);
             inputStatusLabel.setText("Formatfehler - bitte Vorlage erneut laden!");
+            inputsSet = false;
             return;
         }
         //Set the status message
@@ -279,14 +297,16 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel inputFilesLabel;
     private javax.swing.JLabel inputStatusLabel;
+    private schoolalyzer.ui.NumberSpinner numberSpinner1;
     private javax.swing.JButton okButton;
     private javax.swing.JLabel outputFileLabel;
     private javax.swing.JLabel outputStatusLabel;
     private javax.swing.JButton selectInputFilesButton;
     private javax.swing.JButton selectOutputFileButton;
+    private javax.swing.JLabel sheetIndexLabel;
     private javax.swing.JLabel startColLabel;
     private javax.swing.JSpinner startColSpinner;
-    private javax.swing.JLabel startLineLabel;
-    private schoolalyzer.ui.NumberSpinner startLineSpinner;
+    private javax.swing.JLabel startRowLabel;
+    private schoolalyzer.ui.NumberSpinner startRowSpinner;
     // End of variables declaration//GEN-END:variables
 }
