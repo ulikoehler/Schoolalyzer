@@ -19,12 +19,12 @@ import java.util.List;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.SpinnerListModel;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import schoolalyzer.ui.SpinnerColumnNameModel;
+import schoolalyzer.ui.ExcelColumnNameList;
 import schoolalyzer.util.POIUtil;
 
 /**
@@ -49,6 +49,7 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
     /** Creates new form DocumentMergerFrame */
     public DocumentMergerFrame() {
         initComponents();
+        setLocationRelativeTo(null);
         setLocationRelativeTo(null);
     }
 
@@ -124,8 +125,7 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
 
         startColLabel.setText("Ab Spalte:");
 
-        startColSpinner.setModel(new SpinnerColumnNameModel());
-        startColSpinner.setValue("A");
+        startColSpinner.setModel(new SpinnerListModel(new ExcelColumnNameList()));
 
         sheetIndexLabel.setText("Blattnummer:");
 
@@ -212,7 +212,7 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
         //Read the start and the stop row
         int sheetNum = sheetIndexSpinner.getIntValue();
         int startRow = startRowSpinner.getIntValue() - 1; //-1: 1-based must be converted to 0-based
-        int startCol = ((SpinnerColumnNameModel) startColSpinner.getModel()).getColumnIndex();
+        int startCol = POIUtil.getColumnNumber(((SpinnerListModel) startColSpinner.getModel()).getValue().toString());
         int currentOutputColIndex = 0;
         int currentOutputRowIndex = 0;
         for (Workbook inputWorkbook : inputWorkbooks) {
