@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -34,15 +35,15 @@ import schoolalyzer.util.POIUtil;
 public class DocumentMergerFrame extends javax.swing.JFrame {
 
     //File choosers
-    private JFileChooser outputChooser = new JFileChooser();
-    private JFileChooser inputFileChooser = new JFileChooser();
+    private JFileChooser outputChooser = new JFileChooser(new File("."));
+    private JFileChooser inputFileChooser = new JFileChooser(new File("."));
     //Logging
     private static final Logger logger = Logger.getLogger(DocumentMergerFrame.class.getName());
     //Status variables
     boolean inputsSet = false;
     boolean outputSet = false;
     //IO data
-    private List<Workbook> inputWorkbooks = null;
+    private List<Workbook> inputWorkbooks = new LinkedList<Workbook>();
     private Workbook outputWorkbook = null;
     private File outputWorkbookFile = null;
 
@@ -86,6 +87,7 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
         sheetIndexSpinner = new schoolalyzer.ui.NumberSpinner();
 
         setTitle("Schoolalyzer - Dokumente zusammenführen");
+        setIconImage(SchoolalyzerFrame.piIcon.getImage());
 
         okButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/schoolalyzer/icons/task-complete.png"))); // NOI18N
         okButton.setText("Zusammenführen");
@@ -208,7 +210,7 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
             return;
         }
         //Get the output sheet
-        Sheet outputSheet = outputWorkbook.getSheetAt(0); //Always get first sheet
+        Sheet outputSheet = outputWorkbook.createSheet(); //Always get first sheet
         //Read the start and the stop row
         int sheetNum = sheetIndexSpinner.getIntValue();
         int startRow = startRowSpinner.getIntValue() - 1; //-1: 1-based must be converted to 0-based
@@ -218,10 +220,10 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
         for (Workbook inputWorkbook : inputWorkbooks) {
             Sheet inputSheet = inputWorkbook.getSheetAt(sheetNum);
             int currentInputRowIndex = startRow;
-            while (true) //Iterate over all rows
-            {
+            while (true) { //Iterate over all rows
                 //If the first column to process (=startCol) in this row is empty
                 if (POIUtil.isEmpty(inputSheet, currentInputRowIndex, startCol)) {
+                        System.out.println("OBreaking on " + currentInputRowIndex + "   " + startCol);
                     break;
                 }
                 currentOutputColIndex = 0;
@@ -229,10 +231,12 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
                 while (true) //Iterate over the columns in the current row until one is empty
                 {
                     if (POIUtil.isEmpty(inputSheet, currentInputRowIndex, currentInputColIndex)) {
+                        System.out.println("Breaking on " + currentInputRowIndex + "   " + currentInputColIndex);
                         break;
                     }
                     //The cell is not empty --> copy the value into the output document
-                    String cellValue = POIUtil.getStringCellValueSafe(inputSheet, currentInputRowIndex, currentOutputColIndex);
+                    String cellValue = POIUtil.getStringCellValueSafe(inputSheet, currentInputRowIndex, currentInputColIndex);
+                    System.out.println(String.format("%d, %d: %s", currentInputRowIndex, currentOutputColIndex, cellValue));
                     POIUtil.setCellValueSafe(outputSheet, currentOutputRowIndex, currentOutputColIndex, cellValue);
                     currentInputColIndex++;
                     currentOutputColIndex++;

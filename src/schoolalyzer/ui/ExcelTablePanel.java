@@ -10,14 +10,12 @@
  */
 package schoolalyzer.ui;
 
-import schoolalyzer.ui.ExcelTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 import org.apache.poi.ss.usermodel.Sheet;
 import schoolalyzer.SchoolalyzerFrame;

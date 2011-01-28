@@ -167,6 +167,7 @@ public class POIUtil {
     public static boolean isEmpty(Sheet sheet, int rowIndex, int columnIndex) {
         Cell cell = getCellSafe(sheet, rowIndex, columnIndex);
         if (cell == null) { //Return true if the cell does not exist
+            System.out.println("Cell null" + rowIndex + columnIndex);
             return true;
         }
         return isEmpty(cell);
@@ -179,15 +180,8 @@ public class POIUtil {
         if (sheet == null) {
             throw new IllegalArgumentException("The sheet argument is null!");
         }
-        if (rowIndex > sheet.getLastRowNum()) {
-            return null;
-        }
         Row row = sheet.getRow(rowIndex);
-        if (row == null) //undefined row
-        {
-            return null;
-        }
-        if (row.getLastCellNum() - 1 < columnIndex) {
+        if (row == null) { //undefined row
             return null;
         }
         return row.getCell(columnIndex);
