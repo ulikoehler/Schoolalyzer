@@ -17,9 +17,12 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumnModel;
 import org.apache.poi.ss.usermodel.Sheet;
 import schoolalyzer.SchoolalyzerFrame;
 import schoolalyzer.actions.ActionManager;
+import schoolalyzer.util.POIUtil;
 
 /**
  *
@@ -46,6 +49,11 @@ public class ExcelTablePanel extends javax.swing.JPanel {
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         table.setCellSelectionEnabled(true);
+        //Set the column headers
+        TableColumnModel columnModel = table.getColumnModel();
+        for (int i = 0; i < columnModel.getColumnCount(); i++) {
+            columnModel.getColumn(i).setHeaderValue(POIUtil.generateColumnName(i));
+        }
         //Resize the columns
         JPopupMenu popupMenu = new JPopupMenu();
         for (String name : ActionManager.getInstance().getActionNames()) {
