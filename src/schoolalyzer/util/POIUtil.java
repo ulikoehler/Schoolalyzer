@@ -25,6 +25,28 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
  */
 public class POIUtil {
 
+    private static final char[] upperLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+
+    /**
+     * Generates a column value (A, B, ..., AA, BB).
+     * @param n The column index (zero-based)
+     * @return The column name as a string
+     * @throws IllegalArgumentException 
+     */
+    public static String generateColumnName(int n) {
+        StringBuilder sb = new StringBuilder();
+        int len = upperLetters.length;
+        if (n < len) {
+            sb.append(upperLetters[n]);
+        } else if (n < (len * len)) { //only two letters
+            sb.append(upperLetters[(n / len) - 1]);
+            sb.append(upperLetters[n % len]);
+        } else {
+            throw new IllegalArgumentException("Error: Column names with more than 2 letters are not supported at the moment");
+        }
+        return sb.toString();
+    }
+
     /**
      * Loads a Workbook from a file
      * @param file The file to load the workbook from

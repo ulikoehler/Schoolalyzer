@@ -126,6 +126,7 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
         exitMenuItem = new javax.swing.JMenuItem();
         extrasMenu = new javax.swing.JMenu();
         importCSVMenuItem = new javax.swing.JMenuItem();
+        mergeDocumentsMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Schoolalyzer");
@@ -205,6 +206,14 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
         });
         extrasMenu.add(importCSVMenuItem);
 
+        mergeDocumentsMenuItem.setText("Tabellen zusammenführen");
+        mergeDocumentsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mergeDocumentsMenuItemActionPerformed(evt);
+            }
+        });
+        extrasMenu.add(mergeDocumentsMenuItem);
+
         menuBar.add(extrasMenu);
 
         setJMenuBar(menuBar);
@@ -218,7 +227,7 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(actionListButton, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 879, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 895, Short.MAX_VALUE)
                         .addComponent(applyButton))
                     .addComponent(tablesTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1221, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
@@ -445,6 +454,10 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
         csvImporterFrame.setVisible(true);
     }//GEN-LAST:event_importCSVMenuItemActionPerformed
 
+    private void mergeDocumentsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mergeDocumentsMenuItemActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_mergeDocumentsMenuItemActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -467,6 +480,7 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
     private javax.swing.JLabel inputFilesLabel;
     private javax.swing.JLabel inputStatusLabel;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenuItem mergeDocumentsMenuItem;
     private javax.swing.JLabel outputFileLabel;
     private javax.swing.JLabel outputStatusLabel;
     private javax.swing.JButton selectInputFilesButton;

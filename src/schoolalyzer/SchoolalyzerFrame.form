@@ -35,6 +35,14 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="importCSVMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="mergeDocumentsMenuItem">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Tabellen zusammenf&#xfc;hren"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mergeDocumentsMenuItemActionPerformed"/>
+              </Events>
+            </MenuItem>
           </SubComponents>
         </Menu>
       </SubComponents>
@@ -71,7 +79,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="actionListButton" min="-2" pref="218" max="-2" attributes="0"/>
-                      <EmptySpace pref="879" max="32767" attributes="0"/>
+                      <EmptySpace pref="895" max="32767" attributes="0"/>
                       <Component id="applyButton" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Component id="tablesTabbedPane" alignment="0" pref="1221" max="32767" attributes="0"/>
