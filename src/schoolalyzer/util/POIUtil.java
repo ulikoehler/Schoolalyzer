@@ -34,6 +34,10 @@ public class POIUtil {
      * @throws IllegalArgumentException 
      */
     public static String generateColumnName(int n) {
+        if(n < 0)
+        {
+            throw new IllegalArgumentException("Column indices mustn't be negative");
+        }
         StringBuilder sb = new StringBuilder();
         int len = upperLetters.length;
         if (n < len) {
@@ -42,9 +46,54 @@ public class POIUtil {
             sb.append(upperLetters[(n / len) - 1]);
             sb.append(upperLetters[n % len]);
         } else {
-            throw new IllegalArgumentException("Error: Column names with more than 2 letters are not supported at the moment");
+            throw new IllegalArgumentException("Column names with more than 2 letters are not supported at the moment");
         }
         return sb.toString();
+    }
+
+    /**
+     * Searches a char array for a specific character
+     * @param c The char to search for
+     * @param array The array to search in
+     * @return The index (0-based) of the char in the array (first occurrence) or -1 if not found
+     */
+    private static int findInArray(char c, char[] array) {
+        for (int i = 0; i < array.length; i++) {
+            if (c == array[i]) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Parses the column number from column names(A, B, ..., AA, BB).
+     * @param colName The name of the column (automatically converted to uppercase)
+     * @return The 0-based index
+     * @throws IllegalArgumentException If the column name could't be parsed
+     */
+    public static int getColumnNumber(String colName) {
+        colName = colName.toUpperCase();
+        if (colName.length() == 1) {
+            //Search the letter array for the column name letter
+            int index = findInArray(colName.charAt(0), upperLetters);
+            if (index == -1) {
+                throw new IllegalArgumentException("The column name contains illegal characters!");
+            }
+            return index;
+        } else if (colName.length() == 2) {
+            char c1 = colName.charAt(0);
+            char c2 = colName.charAt(1);
+            System.out.println(c1 + "   " + c2);
+            int c1Index = findInArray(c1, upperLetters) + 1; //+1 needed because of the upperLetter.length col names before the two-letter ones begin
+            int c2Index = findInArray(c2, upperLetters);
+            if (c1Index == -1 || c2Index == -1) {
+                throw new IllegalArgumentException("The column name contains illegal characters: " + colName);
+            }
+            return upperLetters.length * c1Index + c2Index;
+        } else {
+            throw new IllegalArgumentException("Given column name " + colName + " can't be parsed (only lengths 1 and 2 supported)");
+        }
     }
 
     /**

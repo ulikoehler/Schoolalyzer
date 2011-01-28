@@ -49,4 +49,16 @@ public class POIUtilTest {
         assertEquals("AB", POIUtil.generateColumnName(27));
         assertEquals("BA", POIUtil.generateColumnName(52));
     }
+    /**
+     * Test of generateColumnName method, of class POIUtil.
+     */
+    @Test
+    public void testGetColumnNumber() {
+        System.out.println("Testing getColumnNumber...");
+        assertEquals(0, POIUtil.getColumnNumber("A"));
+        assertEquals(1, POIUtil.getColumnNumber("B"));
+        assertEquals(26, POIUtil.getColumnNumber("AA"));
+        assertEquals(27, POIUtil.getColumnNumber("AB"));
+        assertEquals(52, POIUtil.getColumnNumber("BA"));
+    }
 }
