@@ -56,6 +56,7 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
     //Frames
     private ActionListFrame actionListFrame = new ActionListFrame();
     private CSVImporterFrame csvImporterFrame = new CSVImporterFrame();
+    private DocumentMergerFrame documentMergerFrame = new DocumentMergerFrame();
 
     public HashMap<String, LinkedList<AbstractCellAction>> getActions() {
         return actions;
@@ -206,6 +207,7 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
         });
         extrasMenu.add(importCSVMenuItem);
 
+        mergeDocumentsMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_M, java.awt.event.InputEvent.CTRL_MASK));
         mergeDocumentsMenuItem.setText("Tabellen zusammenführen");
         mergeDocumentsMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -455,7 +457,7 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_importCSVMenuItemActionPerformed
 
     private void mergeDocumentsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mergeDocumentsMenuItemActionPerformed
-        // TODO add your handling code here:
+        documentMergerFrame.setVisible(true);
     }//GEN-LAST:event_mergeDocumentsMenuItemActionPerformed
 
     /**

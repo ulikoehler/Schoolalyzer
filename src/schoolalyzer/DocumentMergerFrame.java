@@ -21,6 +21,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import schoolalyzer.ui.SpinnerColumnNameModel;
 import schoolalyzer.util.POIUtil;
@@ -47,6 +49,7 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
     /** Creates new form DocumentMergerFrame */
     public DocumentMergerFrame() {
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -79,9 +82,8 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
         startColLabel = new javax.swing.JLabel();
         startColSpinner = new javax.swing.JSpinner();
         sheetIndexLabel = new javax.swing.JLabel();
-        numberSpinner1 = new schoolalyzer.ui.NumberSpinner();
+        sheetIndexSpinner = new schoolalyzer.ui.NumberSpinner();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Schoolalyzer - Dokumente zusammenführen");
 
         okButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/schoolalyzer/icons/task-complete.png"))); // NOI18N
@@ -127,7 +129,7 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
 
         sheetIndexLabel.setText("Blattnummer:");
 
-        numberSpinner1.setIntValue(1);
+        sheetIndexSpinner.setIntValue(1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -146,7 +148,7 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(numberSpinner1, javax.swing.GroupLayout.DEFAULT_SIZE, 437, Short.MAX_VALUE)
+                                .addComponent(sheetIndexSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 437, Short.MAX_VALUE)
                                 .addComponent(startRowSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 437, Short.MAX_VALUE))
                             .addComponent(startColSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
@@ -167,7 +169,7 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(sheetIndexLabel)
-                    .addComponent(numberSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(sheetIndexSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(startRowLabel)
@@ -205,14 +207,38 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Bitte Eingabedateien laden!", "Eingabedateien nicht geladen", JOptionPane.ERROR_MESSAGE, SchoolalyzerFrame.errorIcon);
             return;
         }
-        //Read the start and the stop row 
-        int currentRow = startRowSpinner.getIntValue() - 1; //-1: 1-based must be converted to 0-based
-        int currentCol = ((SpinnerColumnNameModel) startColSpinner.getModel()).getColumnIndex();
+        //Get the output sheet
+        Sheet outputSheet = outputWorkbook.getSheetAt(0); //Always get first sheet
+        //Read the start and the stop row
+        int sheetNum = sheetIndexSpinner.getIntValue();
+        int startRow = startRowSpinner.getIntValue() - 1; //-1: 1-based must be converted to 0-based
+        int startCol = ((SpinnerColumnNameModel) startColSpinner.getModel()).getColumnIndex();
+        int currentOutputColIndex = 0;
+        int currentOutputRowIndex = 0;
         for (Workbook inputWorkbook : inputWorkbooks) {
-            while(true)
+            Sheet inputSheet = inputWorkbook.getSheetAt(sheetNum);
+            int currentInputRowIndex = startRow;
+            while (true) //Iterate over all rows
             {
-                Row row = inputWorkbook.get
-                currentRow++;
+                //If the first column to process (=startCol) in this row is empty
+                if (POIUtil.isEmpty(inputSheet, currentInputRowIndex, startCol)) {
+                    break;
+                }
+                currentOutputColIndex = 0;
+                int currentInputColIndex = startCol;
+                while (true) //Iterate over the columns in the current row until one is empty
+                {
+                    if (POIUtil.isEmpty(inputSheet, currentInputRowIndex, currentInputColIndex)) {
+                        break;
+                    }
+                    //The cell is not empty --> copy the value into the output document
+                    String cellValue = POIUtil.getStringCellValueSafe(inputSheet, currentInputRowIndex, currentOutputColIndex);
+                    POIUtil.setCellValueSafe(outputSheet, currentOutputRowIndex, currentOutputColIndex, cellValue);
+                    currentInputColIndex++;
+                    currentOutputColIndex++;
+                }
+                currentInputRowIndex++;
+                currentOutputRowIndex++;
             }
         }
         try {
@@ -297,13 +323,13 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel inputFilesLabel;
     private javax.swing.JLabel inputStatusLabel;
-    private schoolalyzer.ui.NumberSpinner numberSpinner1;
     private javax.swing.JButton okButton;
     private javax.swing.JLabel outputFileLabel;
     private javax.swing.JLabel outputStatusLabel;
     private javax.swing.JButton selectInputFilesButton;
     private javax.swing.JButton selectOutputFileButton;
     private javax.swing.JLabel sheetIndexLabel;
+    private schoolalyzer.ui.NumberSpinner sheetIndexSpinner;
     private javax.swing.JLabel startColLabel;
     private javax.swing.JSpinner startColSpinner;
     private javax.swing.JLabel startRowLabel;

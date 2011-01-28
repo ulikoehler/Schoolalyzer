@@ -37,6 +37,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="mergeDocumentsMenuItem">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+M"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Tabellen zusammenf&#xfc;hren"/>
               </Properties>
               <Events>

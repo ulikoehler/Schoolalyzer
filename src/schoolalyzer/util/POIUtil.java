@@ -34,8 +34,7 @@ public class POIUtil {
      * @throws IllegalArgumentException 
      */
     public static String generateColumnName(int n) {
-        if(n < 0)
-        {
+        if (n < 0) {
             throw new IllegalArgumentException("Column indices mustn't be negative");
         }
         StringBuilder sb = new StringBuilder();
@@ -110,6 +109,14 @@ public class POIUtil {
     }
 
     /**
+     * Wrapper for getStringValueSafe(Cell) automatically getting the cell in a safe way
+     * @see getStringValueSafe(Cell)
+     */
+    public static String getStringCellValueSafe(Sheet sheet, int rowIndex, int columnIndex) {
+        return getStringCellValueSafe(getCellSafe(sheet, rowIndex, columnIndex));
+    }
+
+    /**
      * Returns a cell value as a String no matter of the cell type
      * @param cell The cell to get the value from
      * @return The cell value as a String
@@ -137,6 +144,35 @@ public class POIUtil {
     }
 
     /**
+     * Checks a cell for emptiness
+     * @param cell The cell to be checked
+     * @return True if the cell is empty, false otherwise
+     */
+    public static boolean isEmpty(Cell cell) {
+        if (cell.getCellType() == Cell.CELL_TYPE_BLANK) {
+            return true;
+        } else if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+            return cell.getStringCellValue().isEmpty();
+        }
+        return false;
+    }
+
+    /**
+     * Checks a cell for emptiness. Automatically gets the cell in a safe way.
+     * @param sheet The sheet of the cell
+     * @param row The row of the cell
+     * @param columnIndex The column of the cell
+     * @return True if the cell does not exist or is empty, false otherwise
+     */
+    public static boolean isEmpty(Sheet sheet, int rowIndex, int columnIndex) {
+        Cell cell = getCellSafe(sheet, rowIndex, columnIndex);
+        if (cell == null) { //Return true if the cell does not exist
+            return true;
+        }
+        return isEmpty(cell);
+    }
+
+    /**
      * @return The cell or null if it doesn't exist.
      */
     public static Cell getCellSafe(Sheet sheet, int rowIndex, int columnIndex) {
@@ -155,6 +191,38 @@ public class POIUtil {
             return null;
         }
         return row.getCell(columnIndex);
+    }
+
+    /**
+     * Gets or creates a cell and the corresponding row in a given sheet
+     * @return The cell from the sheet which is ensured to exist
+     */
+    public static Cell getOrCreateCell(Sheet sheet, int rowIndex, int colIndex) {
+        Row row = sheet.getRow(rowIndex);
+        if (row == null) {
+            row = sheet.createRow(rowIndex);
+        }
+        Cell cell = row.getCell(colIndex);
+        if (cell == null) {
+            cell = row.createCell(colIndex);
+        }
+        return cell;
+    }
+
+    /**
+     * Sets a cell value while ensuring the cell/row/column is created if it doesn't exist
+     */
+    public static void setCellValueSafe(Sheet sheet, int rowIndex, int colIndex, String value) {
+        Cell cell = getOrCreateCell(sheet, rowIndex, colIndex);
+        cell.setCellValue(value);
+    }
+
+    /**
+     * Sets a cell value while ensuring the cell/row/column is created if it doesn't exist
+     */
+    public static void setCellValueSafe(Sheet sheet, int rowIndex, int colIndex, double value) {
+        Cell cell = getOrCreateCell(sheet, rowIndex, colIndex);
+        cell.setCellValue(value);
     }
 
     public static Color getVisibleForegroundColor(Color backgroundColor) {
