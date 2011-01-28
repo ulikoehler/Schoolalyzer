@@ -91,7 +91,7 @@
         <delete dir="${store.dir}"/>
         <mkdir dir="${store.dir}"/>
 
-        <jar destfile="${store.dir}/temp_final.jar" filesetmanifest="skip" compress="true" level="9">
+        <jar destfile="${store.dir}/temp_final.jar" manifest="manifest.mf" compress="true" level="9">
             <zipgroupfileset dir="dist" includes="*.jar"/>
             <zipgroupfileset dir="dist/lib" includes="*.jar"/>
 
