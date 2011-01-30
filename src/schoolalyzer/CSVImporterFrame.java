@@ -20,10 +20,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -36,7 +36,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import schoolalyzer.parsers.CSVParser;
-import schoolalyzer.util.IteratorIterable;
 import schoolalyzer.util.POIUtil;
 
 /**
@@ -266,7 +265,7 @@ public class CSVImporterFrame extends javax.swing.JFrame {
         outputSet = true;
 }//GEN-LAST:event_selectOutputFileButtonActionPerformed
 
-    private int handleCSVFile(String name, InputStream in, int nextRow) {
+    private int handleCSVFile(String name, InputStream in, int nextRow) throws IOException {
         //Get the sheet or create it if it doesn't exist
         Sheet sheet = outputWorkbook.getSheet(name);
         if (sheet == null) {
@@ -274,7 +273,9 @@ public class CSVImporterFrame extends javax.swing.JFrame {
         }
         //Get the first row to insert into
         CSVParser parser = new CSVParser(in, "\"", ",");
-        for (Vector<String> data : new IteratorIterable<Vector<String>>(parser.getDataIterator())) {
+        ArrayList<String> data = null;
+        while ((data = parser.next()) != null) {
+
             Row row = sheet.getRow(nextRow);
             if (row == null) {
                 row = sheet.createRow(nextRow);

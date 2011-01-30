@@ -128,6 +128,7 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
         startRowLabel.setText("Ab Zeile:");
 
         startRowSpinner.setIntValue(1);
+        startRowSpinner.setMinimum(new Integer(1));
 
         startColLabel.setText("Ab Spalte:");
 
@@ -136,10 +137,13 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
         sheetIndexLabel.setText("Blattnummer:");
 
         sheetIndexSpinner.setIntValue(1);
+        sheetIndexSpinner.setMinimum(new Integer(1));
 
         primaryColLabel.setText("Primärspalte:");
 
         colCountLabel.setText("Spaltenanzahl:");
+
+        colCountSpinner.setMinimum(new Integer(1));
 
         primaryColSpinner.setModel(new SpinnerListModel(new ExcelColumnNameList()));
 
