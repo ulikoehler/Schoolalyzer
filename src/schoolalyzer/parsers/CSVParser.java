@@ -16,14 +16,30 @@ import java.util.ArrayList;
  */
 public class CSVParser {
 
-    private String enclosator = "\"";
-    private String columnSeparator = ",";
+    private char[] enclosers = "\"".toCharArray();
+    private char[] columnSeparators = ",".toCharArray();
     private BufferedReader streamSource = null;
 
-    public CSVParser(InputStream inputSource, String enclosator, String columnSeparator) {
+    public CSVParser(InputStream inputSource, String enclosers, String columnSeparator) {
         this.streamSource = new BufferedReader(new InputStreamReader(inputSource));
-        this.enclosator = enclosator;
-        this.columnSeparator = columnSeparator;
+        this.enclosers = enclosers.toCharArray();
+        this.columnSeparators = columnSeparator.toCharArray();
+    }
+
+    /**
+     * Checks if a given character array contains a specific character.
+     * Unlike Arrays.binarySearch the array doesn't need to be sorted
+     * @param array The array to check
+     * @param c The character to check
+     * @return True if and only if the char is contained in the array; false otherwise
+     */
+    public static boolean containsChar(char[] array, char c) {
+        for (char a : array) {
+            if (a == c) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -40,24 +56,38 @@ public class CSVParser {
             return null;
         }
 
+        System.out.println(new String(enclosers));
+
+        char[] lineAsCharArray = line.toCharArray();
+
         ArrayList<String> lineData = new ArrayList<String>(32); //It's unlikely there are more than 32 fields
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(256); //Field lengths > 256 are unlikely
         boolean inEnclosedRegion = false;
+        char currentEnclosingCharacter = 0;
 
         for (int j = 0; j < line.length(); j++) {
-            char c = line.charAt(j);
-            String cAsString = new Character(c).toString(); //String representation of c
-            if (this.enclosator.contains(cAsString)) {
-                inEnclosedRegion = !inEnclosedRegion;
-            } else if (this.columnSeparator.contains(String.valueOf(cAsString)) && !inEnclosedRegion) {
+            char currentChar = lineAsCharArray[j];
+            if (containsChar(enclosers, currentChar)) {
+                if (inEnclosedRegion) {
+                    if (currentChar == currentEnclosingCharacter) {
+                        inEnclosedRegion = false;
+                    }
+                    else { //The current char is treated as a 'normal' character
+                        sb.append(currentChar);
+                    }
+                } else { //!inEnclosedRegion
+                    inEnclosedRegion = true;
+                    currentEnclosingCharacter = currentChar;
+                }
+            } else if (containsChar(columnSeparators, currentChar) && !inEnclosedRegion) {
                 //Append the string buffer content to the list and clear the buffer
                 lineData.add(sb.toString());
                 sb.setLength(0);
             } else { //'Normal' character
-                sb.append(c);
+                sb.append(currentChar);
             }
         }
-        if (sb.length() > 0) { //If there is content in the string buffer
+        if (sb.length() > 0) { //If there is content left in the string buffer
             //Append the string buffer content to the list
             lineData.add(sb.toString());
         }

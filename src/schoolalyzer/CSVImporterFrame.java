@@ -97,9 +97,16 @@ public class CSVImporterFrame extends javax.swing.JFrame {
         selectOutputFileButton = new javax.swing.JButton();
         outputStatusLabel = new javax.swing.JLabel();
         applyButton = new javax.swing.JButton();
+        separatorLabel = new javax.swing.JLabel();
+        encloseWithLabel = new javax.swing.JLabel();
+        commaSeparatorCheckbox = new javax.swing.JCheckBox();
+        semicolonSeparatorCheckbox = new javax.swing.JCheckBox();
+        doubleQuoteEncloseCheckbox = new javax.swing.JCheckBox();
+        apostropheEncloseCheckbox = new javax.swing.JCheckBox();
 
         setTitle("Schoolalyzer - CSV importieren");
         setIconImage(SchoolalyzerFrame.piIcon.getImage());
+        setResizable(false);
 
         templateFileLabel.setText("Vorlage:");
 
@@ -145,6 +152,20 @@ public class CSVImporterFrame extends javax.swing.JFrame {
             }
         });
 
+        separatorLabel.setText("Trenner:");
+
+        encloseWithLabel.setText("Einschließen mit:");
+
+        commaSeparatorCheckbox.setSelected(true);
+        commaSeparatorCheckbox.setText("Komma");
+
+        semicolonSeparatorCheckbox.setText("Semikolon");
+
+        doubleQuoteEncloseCheckbox.setSelected(true);
+        doubleQuoteEncloseCheckbox.setText("Anführungszeichen (\")");
+
+        apostropheEncloseCheckbox.setText("Apostroph (')");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -152,26 +173,50 @@ public class CSVImporterFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(inputFilesLabel)
-                    .addComponent(templateFileLabel)
-                    .addComponent(outputFileLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(selectOutputFileButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(selectInputFilesButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(selectTemplateButton, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(applyButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE)
-                    .addComponent(inputStatusLabel)
-                    .addComponent(templateStatusLabel)
-                    .addComponent(outputStatusLabel))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(inputFilesLabel)
+                            .addComponent(templateFileLabel)
+                            .addComponent(outputFileLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(selectOutputFileButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(selectInputFilesButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(selectTemplateButton, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(inputStatusLabel)
+                            .addComponent(templateStatusLabel)
+                            .addComponent(outputStatusLabel)))
+                    .addComponent(applyButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 602, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(encloseWithLabel)
+                            .addComponent(separatorLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(doubleQuoteEncloseCheckbox)
+                            .addComponent(commaSeparatorCheckbox))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(semicolonSeparatorCheckbox)
+                            .addComponent(apostropheEncloseCheckbox))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(separatorLabel)
+                    .addComponent(commaSeparatorCheckbox)
+                    .addComponent(semicolonSeparatorCheckbox))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(encloseWithLabel)
+                    .addComponent(doubleQuoteEncloseCheckbox)
+                    .addComponent(apostropheEncloseCheckbox))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(templateFileLabel)
                     .addComponent(selectTemplateButton)
@@ -187,8 +232,8 @@ public class CSVImporterFrame extends javax.swing.JFrame {
                     .addComponent(outputFileLabel)
                     .addComponent(outputStatusLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(applyButton, javax.swing.GroupLayout.PREFERRED_SIZE, 42, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(applyButton)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -265,6 +310,35 @@ public class CSVImporterFrame extends javax.swing.JFrame {
         outputSet = true;
 }//GEN-LAST:event_selectOutputFileButtonActionPerformed
 
+    /**
+     * Assembles a String of all the separator characters suitable for use by CSVParser
+     * @return
+     */
+    private String buildSeparatorString() {
+        StringBuilder separator = new StringBuilder();
+        if (commaSeparatorCheckbox.isSelected()) {
+            separator.append(",");
+        }
+        if (semicolonSeparatorCheckbox.isSelected()) {
+            separator.append(";");
+        }
+        return separator.toString();
+    }
+
+    /**
+     * Assembles a String of all the enclosing characters suitable for use by CSVParser
+     */
+    private String buildEncloserString() {
+        StringBuilder enclosers = new StringBuilder();
+        if (doubleQuoteEncloseCheckbox.isSelected()) {
+            enclosers.append("\"");
+        }
+        if (apostropheEncloseCheckbox.isSelected()) {
+            enclosers.append("'");
+        }
+        return enclosers.toString();
+    }
+
     private int handleCSVFile(String name, InputStream in, int nextRow) throws IOException {
         //Get the sheet or create it if it doesn't exist
         Sheet sheet = outputWorkbook.getSheet(name);
@@ -272,7 +346,7 @@ public class CSVImporterFrame extends javax.swing.JFrame {
             sheet = outputWorkbook.createSheet(name);
         }
         //Get the first row to insert into
-        CSVParser parser = new CSVParser(in, "\"", ",");
+        CSVParser parser = new CSVParser(in, buildEncloserString(), buildSeparatorString());
         ArrayList<String> data = null;
         while ((data = parser.next()) != null) {
 
@@ -362,7 +436,11 @@ public class CSVImporterFrame extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox apostropheEncloseCheckbox;
     private javax.swing.JButton applyButton;
+    private javax.swing.JCheckBox commaSeparatorCheckbox;
+    private javax.swing.JCheckBox doubleQuoteEncloseCheckbox;
+    private javax.swing.JLabel encloseWithLabel;
     private javax.swing.JLabel inputFilesLabel;
     private javax.swing.JLabel inputStatusLabel;
     private javax.swing.JLabel outputFileLabel;
@@ -370,6 +448,8 @@ public class CSVImporterFrame extends javax.swing.JFrame {
     private javax.swing.JButton selectInputFilesButton;
     private javax.swing.JButton selectOutputFileButton;
     private javax.swing.JButton selectTemplateButton;
+    private javax.swing.JCheckBox semicolonSeparatorCheckbox;
+    private javax.swing.JLabel separatorLabel;
     private javax.swing.JLabel templateFileLabel;
     private javax.swing.JLabel templateStatusLabel;
     // End of variables declaration//GEN-END:variables
