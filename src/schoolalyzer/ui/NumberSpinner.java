@@ -19,6 +19,14 @@ public class NumberSpinner extends JSpinner {
         initComponents();
     }
 
+    public void setMinimum(Comparable min) {
+        ((SpinnerNumberModel) getModel()).setMinimum(min);
+    }
+
+    public void setMaximum(Comparable max) {
+        ((SpinnerNumberModel) getModel()).setMaximum(max);
+    }
+
     public int getIntValue() {
         return ((SpinnerNumberModel) getModel()).getNumber().intValue();
     }

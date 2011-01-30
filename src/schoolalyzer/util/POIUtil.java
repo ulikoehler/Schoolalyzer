@@ -45,7 +45,7 @@ public class POIUtil {
             sb.append(upperLetters[(n / len) - 1]);
             sb.append(upperLetters[n % len]);
         } else {
-            throw new IllegalArgumentException("Column names with more than 2 letters are not supported at the moment");
+            throw new IllegalArgumentException("Column names with more than 2 letters are not supported at the moment (argument was " + n + ")");
         }
         return sb.toString();
     }
@@ -113,7 +113,11 @@ public class POIUtil {
      * @see getStringValueSafe(Cell)
      */
     public static String getStringCellValueSafe(Sheet sheet, int rowIndex, int columnIndex) {
-        return getStringCellValueSafe(getCellSafe(sheet, rowIndex, columnIndex));
+        Cell cell = getCellSafe(sheet, rowIndex, columnIndex);
+        if (cell == null) {
+            return null;
+        }
+        return getStringCellValueSafe(cell);
     }
 
     /**

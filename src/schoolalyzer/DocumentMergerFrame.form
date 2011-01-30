@@ -25,39 +25,45 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
+          <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="startColLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="okButton" alignment="1" pref="582" max="32767" attributes="0"/>
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="inputFilesLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="outputFileLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="sheetIndexLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="startRowLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="selectOutputFileButton" alignment="0" max="32767" attributes="1"/>
+                          <Component id="selectInputFilesButton" alignment="0" min="-2" max="-2" attributes="1"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="103" alignment="0" groupAlignment="1" attributes="0">
-                              <Component id="sheetIndexSpinner" pref="437" max="32767" attributes="0"/>
-                              <Component id="startRowSpinner" pref="437" max="32767" attributes="0"/>
-                          </Group>
-                          <Component id="startColSpinner" alignment="0" min="-2" pref="437" max="-2" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="selectOutputFileButton" alignment="0" max="32767" attributes="1"/>
-                                  <Component id="selectInputFilesButton" alignment="0" min="-2" max="-2" attributes="1"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="inputStatusLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="outputStatusLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
+                          <Component id="inputStatusLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="outputStatusLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="startColLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="sheetIndexLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="startRowLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="primaryColLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="colCountLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="colCountSpinner" alignment="0" pref="460" max="32767" attributes="0"/>
+                          <Component id="primaryColSpinner" alignment="0" pref="460" max="32767" attributes="0"/>
+                          <Component id="sheetIndexSpinner" alignment="1" pref="460" max="32767" attributes="0"/>
+                          <Component id="startRowSpinner" alignment="1" pref="460" max="32767" attributes="0"/>
+                          <Component id="startColSpinner" alignment="0" pref="460" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -83,6 +89,16 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="primaryColSpinner" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="primaryColLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="colCountLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="colCountSpinner" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="inputFilesLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="selectInputFilesButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="inputStatusLabel" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -95,7 +111,7 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="okButton" min="-2" max="-2" attributes="1"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -184,6 +200,25 @@
     <Component class="schoolalyzer.ui.NumberSpinner" name="sheetIndexSpinner">
       <Properties>
         <Property name="intValue" type="int" value="1"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="primaryColLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Prim&#xe4;rspalte:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="colCountLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Spaltenanzahl:"/>
+      </Properties>
+    </Component>
+    <Component class="schoolalyzer.ui.NumberSpinner" name="colCountSpinner">
+    </Component>
+    <Component class="javax.swing.JSpinner" name="primaryColSpinner">
+      <Properties>
+        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="new SpinnerListModel(new ExcelColumnNameList())" type="code"/>
+        </Property>
       </Properties>
     </Component>
   </SubComponents>

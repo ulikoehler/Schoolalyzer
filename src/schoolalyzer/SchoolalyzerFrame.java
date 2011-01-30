@@ -130,7 +130,7 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
         mergeDocumentsMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Schoolalyzer 2.6");
+        setTitle("Schoolalyzer 2.6.1");
         setIconImage(piIcon.getImage());
 
         inputFilesLabel.setText("Eingabedateien:");
