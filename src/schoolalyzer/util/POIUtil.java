@@ -10,10 +10,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -118,6 +120,41 @@ public class POIUtil {
             return null;
         }
         return getStringCellValueSafe(cell);
+    }
+
+    /**
+     * Copies the value from one cell into another (different sheets are supported)
+     */
+    public static void copyCellValue(Sheet sourceSheet, int sourceRowIndex, int sourceColumnIndex, Sheet targetSheet, int targetRowIndex, int targetColumnIndex) {
+        Cell sourceCell = getCellSafe(sourceSheet, sourceRowIndex, sourceColumnIndex);
+        Cell targetCell = getOrCreateCell(targetSheet, targetRowIndex, targetColumnIndex);
+        if (sourceCell == null) {
+            throw new IllegalArgumentException("Source cell doesn't exist");
+        }
+        //Copy the cell style
+        CreationHelper createHelper = targetSheet.getWorkbook().getCreationHelper();
+        CellStyle cellStyle = targetSheet.getWorkbook().createCellStyle();
+        cellStyle.setDataFormat(createHelper.createDataFormat().getFormat(sourceCell.getCellStyle().getDataFormatString()));
+        targetCell.setCellStyle(cellStyle);
+        //Copy the cell content
+        if (sourceCell.getCellType() == Cell.CELL_TYPE_BOOLEAN) {
+            targetCell.setCellType(Cell.CELL_TYPE_BOOLEAN);
+            targetCell.setCellValue(sourceCell.getBooleanCellValue());
+        } else if (sourceCell.getCellType() == Cell.CELL_TYPE_BLANK) {
+            //Do nothing
+        } else if (sourceCell.getCellType() == Cell.CELL_TYPE_ERROR) {
+            targetCell.setCellType(Cell.CELL_TYPE_ERROR);
+            targetCell.setCellValue(sourceCell.getErrorCellValue());
+        } else if (sourceCell.getCellType() == Cell.CELL_TYPE_FORMULA) {
+            targetCell.setCellType(Cell.CELL_TYPE_FORMULA);
+            targetCell.setCellFormula(sourceCell.getCellFormula());
+        } else if (sourceCell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+            targetCell.setCellType(Cell.CELL_TYPE_NUMERIC);
+            targetCell.setCellValue(sourceCell.getNumericCellValue());
+        } else if (sourceCell.getCellType() == Cell.CELL_TYPE_STRING) {
+            targetCell.setCellType(Cell.CELL_TYPE_STRING);
+            targetCell.setCellValue(sourceCell.getStringCellValue());
+        }
     }
 
     /**

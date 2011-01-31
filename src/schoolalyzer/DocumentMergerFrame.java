@@ -143,6 +143,7 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
 
         colCountLabel.setText("Spaltenanzahl:");
 
+        colCountSpinner.setIntValue(1);
         colCountSpinner.setMinimum(new Integer(1));
 
         primaryColSpinner.setModel(new SpinnerListModel(new ExcelColumnNameList()));
@@ -253,16 +254,14 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
             while (true) { //Iterate over all rows
                 //If the first column to process (=startCol) in this row is empty
                 if (POIUtil.isEmpty(inputSheet, currentInputRowIndex, primaryColIndex)) {
-                    System.out.println("Breaking at row " + currentInputRowIndex);
+                    //System.out.println("Breaking at row " + currentInputRowIndex);
                     break;
                 }
                 currentOutputColIndex = 0;
                 int currentInputColIndex = startCol;
-                for (int i = 0; i < colCount; i++) //Iterate over the columns in the current row until one is empty
-                {
+                for (int i = 0; i < colCount; i++) { //Iterate over the columns in the current row until one is empty
                     //The cell is not empty --> copy the value into the output document
-                    String cellValue = POIUtil.getStringCellValueSafe(inputSheet, currentInputRowIndex, currentInputColIndex);
-                    POIUtil.setCellValueSafe(outputSheet, currentOutputRowIndex, currentOutputColIndex, cellValue);
+                    POIUtil.copyCellValue(inputSheet, currentInputRowIndex, currentInputColIndex, outputSheet, currentOutputRowIndex, currentOutputColIndex);
                     currentInputColIndex++;
                     currentOutputColIndex++;
                 }

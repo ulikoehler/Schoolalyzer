@@ -220,6 +220,7 @@
     </Component>
     <Component class="schoolalyzer.ui.NumberSpinner" name="colCountSpinner">
       <Properties>
+        <Property name="intValue" type="int" value="1"/>
         <Property name="minimum" type="java.lang.Comparable" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="new Integer(1)" type="code"/>
         </Property>
