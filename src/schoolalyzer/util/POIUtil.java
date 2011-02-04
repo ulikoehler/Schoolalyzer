@@ -127,10 +127,11 @@ public class POIUtil {
      */
     public static void copyCellValue(Sheet sourceSheet, int sourceRowIndex, int sourceColumnIndex, Sheet targetSheet, int targetRowIndex, int targetColumnIndex) {
         Cell sourceCell = getCellSafe(sourceSheet, sourceRowIndex, sourceColumnIndex);
-        Cell targetCell = getOrCreateCell(targetSheet, targetRowIndex, targetColumnIndex);
         if (sourceCell == null) {
-            throw new IllegalArgumentException("Source cell doesn't exist");
+            //Nothing to copy
+            return;
         }
+        Cell targetCell = getOrCreateCell(targetSheet, targetRowIndex, targetColumnIndex);
         //Copy the cell style
         CreationHelper createHelper = targetSheet.getWorkbook().getCreationHelper();
         CellStyle cellStyle = targetSheet.getWorkbook().createCellStyle();
@@ -206,7 +207,11 @@ public class POIUtil {
      * @return True if the cell does not exist or is empty, false otherwise
      */
     public static boolean isEmpty(Sheet sheet, int rowIndex, int columnIndex) {
-        Cell cell = getCellSafe(sheet, rowIndex, columnIndex);
+        Row row = sheet.getRow(rowIndex);
+        if (row == null) { //undefined row
+            return true;
+        }
+        Cell cell = row.getCell(columnIndex);
         if (cell == null) { //Return true if the cell does not exist
             return true;
         }

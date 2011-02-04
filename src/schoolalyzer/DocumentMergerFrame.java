@@ -85,10 +85,8 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
         startColSpinner = new javax.swing.JSpinner();
         sheetIndexLabel = new javax.swing.JLabel();
         sheetIndexSpinner = new schoolalyzer.ui.NumberSpinner();
-        primaryColLabel = new javax.swing.JLabel();
         colCountLabel = new javax.swing.JLabel();
         colCountSpinner = new schoolalyzer.ui.NumberSpinner();
-        primaryColSpinner = new javax.swing.JSpinner();
 
         setTitle("Schoolalyzer - Dokumente zusammenführen");
         setIconImage(SchoolalyzerFrame.piIcon.getImage());
@@ -139,14 +137,10 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
         sheetIndexSpinner.setIntValue(1);
         sheetIndexSpinner.setMinimum(new Integer(1));
 
-        primaryColLabel.setText("Primärspalte:");
-
         colCountLabel.setText("Spaltenanzahl:");
 
         colCountSpinner.setIntValue(1);
         colCountSpinner.setMinimum(new Integer(1));
-
-        primaryColSpinner.setModel(new SpinnerListModel(new ExcelColumnNameList()));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -156,6 +150,16 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(startColLabel)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(sheetIndexLabel)
+                            .addComponent(startRowLabel))
+                        .addGap(22, 22, 22)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(sheetIndexSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 460, Short.MAX_VALUE)
+                            .addComponent(startRowSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 460, Short.MAX_VALUE)
+                            .addComponent(startColSpinner, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 460, Short.MAX_VALUE))
+                        .addGap(20, 20, 20))
                     .addComponent(okButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 582, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -171,18 +175,9 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
                             .addComponent(outputStatusLabel))
                         .addGap(20, 20, 20))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(sheetIndexLabel)
-                            .addComponent(startRowLabel)
-                            .addComponent(primaryColLabel)
-                            .addComponent(colCountLabel))
+                        .addComponent(colCountLabel)
                         .addGap(22, 22, 22)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(colCountSpinner, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 460, Short.MAX_VALUE)
-                            .addComponent(primaryColSpinner, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 460, Short.MAX_VALUE)
-                            .addComponent(sheetIndexSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 460, Short.MAX_VALUE)
-                            .addComponent(startRowSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 460, Short.MAX_VALUE)
-                            .addComponent(startColSpinner, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 460, Short.MAX_VALUE))
+                        .addComponent(colCountSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 460, Short.MAX_VALUE)
                         .addGap(20, 20, 20)))
                 .addContainerGap())
         );
@@ -203,10 +198,6 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
                     .addComponent(startColSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(primaryColSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(primaryColLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(colCountLabel)
                     .addComponent(colCountSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -221,7 +212,7 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
                     .addComponent(outputStatusLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(okButton)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -242,7 +233,6 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
         Sheet outputSheet = outputWorkbook.createSheet(); //Always get first sheet
         //Read the start and the stop row
         int colCount = colCountSpinner.getIntValue();
-        int primaryColIndex = POIUtil.getColumnNumber(((SpinnerListModel) primaryColSpinner.getModel()).getValue().toString());
         int sheetNum = sheetIndexSpinner.getIntValue() - 1;
         int startRow = startRowSpinner.getIntValue() - 1; //-1: 1-based must be converted to 0-based
         int startCol = POIUtil.getColumnNumber(((SpinnerListModel) startColSpinner.getModel()).getValue().toString());
@@ -252,11 +242,18 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
             Sheet inputSheet = inputWorkbook.getSheetAt(sheetNum);
             int currentInputRowIndex = startRow;
             while (true) { //Iterate over all rows
-                //If the first column to process (=startCol) in this row is empty
-                if (POIUtil.isEmpty(inputSheet, currentInputRowIndex, primaryColIndex)) {
+                //If all columns are empty, break
+                boolean breakRowLoop = true; //Set to true if the loop iterating over all rows shouldn't be broken
+                for (int i = startCol; i < (startCol + colCount); i++) { //Sets breakRowLoop to false if neccessary
                     //System.out.println("Breaking at row " + currentInputRowIndex);
+                    if (!POIUtil.isEmpty(inputSheet, currentInputRowIndex, i)) { //Break only if all cols are empty
+                        breakRowLoop = false;
+                    }
+                }
+                if (breakRowLoop) { //Break if neccessary
                     break;
                 }
+                //Process the current row
                 currentOutputColIndex = 0;
                 int currentInputColIndex = startCol;
                 for (int i = 0; i < colCount; i++) { //Iterate over the columns in the current row until one is empty
@@ -358,8 +355,6 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
     private javax.swing.JButton okButton;
     private javax.swing.JLabel outputFileLabel;
     private javax.swing.JLabel outputStatusLabel;
-    private javax.swing.JLabel primaryColLabel;
-    private javax.swing.JSpinner primaryColSpinner;
     private javax.swing.JButton selectInputFilesButton;
     private javax.swing.JButton selectOutputFileButton;
     private javax.swing.JLabel sheetIndexLabel;
