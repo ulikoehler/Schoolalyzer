@@ -17,11 +17,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Vector;
 import java.util.logging.Logger;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SpinnerListModel;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -32,23 +34,20 @@ import schoolalyzer.util.POIUtil;
  *
  * @author uli
  */
-public class DocumentMergerFrame extends javax.swing.JFrame {
+public class DataValidationFrame extends javax.swing.JFrame {
 
     //File choosers
-    private JFileChooser outputChooser = new JFileChooser(new File("."));
     private JFileChooser inputFileChooser = new JFileChooser(new File("."));
     //Logging
-    private static final Logger logger = Logger.getLogger(DocumentMergerFrame.class.getName());
+    private static final Logger logger = Logger.getLogger(DataValidationFrame.class.getName());
     //Status variables
     boolean inputsSet = false;
-    boolean outputSet = false;
     //IO data
     private List<Workbook> inputWorkbooks = new LinkedList<Workbook>();
-    private Workbook outputWorkbook = null;
     private File outputWorkbookFile = null;
 
     /** Creates new form DocumentMergerFrame */
-    public DocumentMergerFrame() {
+    public DataValidationFrame() {
         initComponents();
         setLocationRelativeTo(null);
         setLocationRelativeTo(null);
@@ -59,8 +58,19 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
      */
     private void saveOutputWorkbook() throws IOException {
         OutputStream os = new BufferedOutputStream(new FileOutputStream(outputWorkbookFile));
-        outputWorkbook.write(os);
         os.close();
+    }
+
+    private ComboBoxModel getConstraintsModel()
+    {
+        List<String> list = new LinkedList<String>();
+        list.add("Keine");
+        list.add("Nichtleer");
+        list.add("Leer");
+        list.add("Zahl");
+        list.add("Kleiner als");
+        list.add("Größer als");
+        return new DefaultComboBoxModel(list.toArray(new String[list.size()]));
     }
 
     /** This method is called from within the constructor to
@@ -73,12 +83,9 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         okButton = new javax.swing.JButton();
-        outputFileLabel = new javax.swing.JLabel();
         selectInputFilesButton = new javax.swing.JButton();
         inputFilesLabel = new javax.swing.JLabel();
         inputStatusLabel = new javax.swing.JLabel();
-        outputStatusLabel = new javax.swing.JLabel();
-        selectOutputFileButton = new javax.swing.JButton();
         startRowLabel = new javax.swing.JLabel();
         startRowSpinner = new schoolalyzer.ui.NumberSpinner();
         startColLabel = new javax.swing.JLabel();
@@ -87,19 +94,21 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
         sheetIndexSpinner = new schoolalyzer.ui.NumberSpinner();
         colCountLabel = new javax.swing.JLabel();
         colCountSpinner = new schoolalyzer.ui.NumberSpinner();
+        constraintsLabel = new javax.swing.JLabel();
+        currentColumnSpinner = new schoolalyzer.ui.NumberSpinner();
+        Spalte = new javax.swing.JLabel();
+        currentColumnConstraintComboBox = new javax.swing.JComboBox();
 
         setTitle("Schoolalyzer - Dokumente zusammenführen");
         setIconImage(SchoolalyzerFrame.piIcon.getImage());
 
         okButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/schoolalyzer/icons/task-complete.png"))); // NOI18N
-        okButton.setText("Zusammenführen");
+        okButton.setText("Überprüfen");
         okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
             }
         });
-
-        outputFileLabel.setText("Ausgabedatei:");
 
         selectInputFilesButton.setText("Auswählen");
         selectInputFilesButton.addActionListener(new java.awt.event.ActionListener() {
@@ -112,16 +121,6 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
 
         inputStatusLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/schoolalyzer/icons/dialog-information.png"))); // NOI18N
         inputStatusLabel.setText("Bitte Eingabedateien laden!");
-
-        outputStatusLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/schoolalyzer/icons/dialog-information.png"))); // NOI18N
-        outputStatusLabel.setText("Bitte Ausgabedatei auswählen !");
-
-        selectOutputFileButton.setText("Auswählen");
-        selectOutputFileButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                selectOutputFileButtonActionPerformed(evt);
-            }
-        });
 
         startRowLabel.setText("Ab Zeile:");
 
@@ -142,6 +141,13 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
         colCountSpinner.setIntValue(1);
         colCountSpinner.setMinimum(new Integer(1));
 
+        constraintsLabel.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        constraintsLabel.setText("Bedingungen:");
+
+        Spalte.setText("Spalte:");
+
+        currentColumnConstraintComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -149,35 +155,38 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(startColLabel)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(sheetIndexLabel)
+                            .addComponent(startRowLabel))
+                        .addGap(22, 22, 22)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(sheetIndexSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 465, Short.MAX_VALUE)
+                            .addComponent(startRowSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 465, Short.MAX_VALUE)
+                            .addComponent(startColSpinner, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 465, Short.MAX_VALUE))
+                        .addGap(20, 20, 20))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(inputFilesLabel)
+                        .addGap(6, 6, 6)
+                        .addComponent(selectInputFilesButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(inputStatusLabel)
+                        .addGap(47, 47, 47))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(colCountLabel)
+                        .addGap(18, 18, 18)
+                        .addComponent(colCountSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 464, Short.MAX_VALUE)
+                        .addGap(20, 20, 20))
                     .addComponent(okButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 604, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(inputFilesLabel)
-                            .addComponent(outputFileLabel)
-                            .addComponent(colCountLabel)
-                            .addComponent(sheetIndexLabel)
-                            .addComponent(startRowLabel)
-                            .addComponent(startColLabel))
+                        .addComponent(constraintsLabel)
+                        .addGap(18, 18, 18)
+                        .addComponent(Spalte)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(startColSpinner, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
-                                    .addComponent(colCountSpinner, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(selectOutputFileButton)
-                                            .addComponent(selectInputFilesButton))
-                                        .addGap(18, 18, 18)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(inputStatusLabel)
-                                            .addComponent(outputStatusLabel))))
-                                .addGap(20, 20, 20))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(sheetIndexSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
-                                    .addComponent(startRowSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE))
-                                .addGap(20, 20, 20)))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(currentColumnConstraintComboBox, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(currentColumnSpinner, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -206,37 +215,29 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
                     .addComponent(selectInputFilesButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(selectOutputFileButton)
-                    .addComponent(outputFileLabel)
-                    .addComponent(outputStatusLabel))
+                    .addComponent(constraintsLabel)
+                    .addComponent(Spalte)
+                    .addComponent(currentColumnSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(currentColumnConstraintComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
                 .addComponent(okButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-
-        outputWorkbook = new HSSFWorkbook();
-        if (!outputSet) {
-            JOptionPane.showMessageDialog(this, "Bitte Ausgabedatei setzen!", "Ausgabedatei nicht gesetzt", JOptionPane.ERROR_MESSAGE, SchoolalyzerFrame.errorIcon);
-            return;
-        }
         if (!inputsSet) {
             JOptionPane.showMessageDialog(this, "Bitte Eingabedateien laden!", "Eingabedateien nicht geladen", JOptionPane.ERROR_MESSAGE, SchoolalyzerFrame.errorIcon);
             return;
         }
-        //Get the output sheet
-        Sheet outputSheet = outputWorkbook.createSheet(); //Always get first sheet
         //Read the start and the stop row
         int colCount = colCountSpinner.getIntValue();
         int sheetNum = sheetIndexSpinner.getIntValue() - 1;
         int startRow = startRowSpinner.getIntValue() - 1; //-1: 1-based must be converted to 0-based
         int startCol = POIUtil.getColumnNumber(((SpinnerListModel) startColSpinner.getModel()).getValue().toString());
-        int currentOutputColIndex = 0;
-        int currentOutputRowIndex = 0;
         for (Workbook inputWorkbook : inputWorkbooks) {
             Sheet inputSheet = inputWorkbook.getSheetAt(sheetNum);
             int currentInputRowIndex = startRow;
@@ -253,16 +254,12 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
                     break;
                 }
                 //Process the current row
-                currentOutputColIndex = 0;
                 int currentInputColIndex = startCol;
                 for (int i = 0; i < colCount; i++) { //Iterate over the columns in the current row until one is empty
                     //The cell is not empty --> copy the value into the output document
-                    POIUtil.copyCellValue(inputSheet, currentInputRowIndex, currentInputColIndex, outputSheet, currentOutputRowIndex, currentOutputColIndex);
-                    currentInputColIndex++;
-                    currentOutputColIndex++;
+                    
                 }
                 currentInputRowIndex++;
-                currentOutputRowIndex++;
             }
         }
         try {
@@ -309,32 +306,6 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
         inputStatusLabel.setText(dataFiles.length + " Eingabedateien erfolgreich geladen");
 }//GEN-LAST:event_selectInputFilesButtonActionPerformed
 
-    private void selectOutputFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectOutputFileButtonActionPerformed
-        outputChooser.setDialogTitle("Select the output file");
-        if (outputChooser.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) {
-            return;
-        }
-        outputSet = false;
-        File tempOutputFile = outputChooser.getSelectedFile();
-        if (tempOutputFile.exists()) {
-            int overwrite = JOptionPane.showConfirmDialog(this, "Datei existiert - überschreiben?", "Überschreiben", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-            if (overwrite != JOptionPane.YES_OPTION) {
-                return;
-            }
-            //Delete the file to vbe sure it doesn't exist
-            tempOutputFile.delete();
-        }
-        if (!tempOutputFile.canWrite() && (!tempOutputFile.exists() && !tempOutputFile.getParentFile().canWrite())) {
-            JOptionPane.showMessageDialog(this, "In diese Datei kann nicht geschrieben werden! Bitte andere Ausgabedatei wählen!", "Schreiben nicht erlaubt", JOptionPane.ERROR_MESSAGE, SchoolalyzerFrame.errorIcon);
-            return;
-        }
-        //Everything's OK, so set the status label and the output file member variable
-        outputWorkbookFile = tempOutputFile;
-        outputStatusLabel.setIcon(SchoolalyzerFrame.okIcon);
-        outputStatusLabel.setText("Ausgabedatei erfolgreich gesetzt");
-        outputSet = true;
-}//GEN-LAST:event_selectOutputFileButtonActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -342,20 +313,21 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                new DocumentMergerFrame().setVisible(true);
+                new DataValidationFrame().setVisible(true);
             }
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel Spalte;
     private javax.swing.JLabel colCountLabel;
     private schoolalyzer.ui.NumberSpinner colCountSpinner;
+    private javax.swing.JLabel constraintsLabel;
+    private javax.swing.JComboBox currentColumnConstraintComboBox;
+    private schoolalyzer.ui.NumberSpinner currentColumnSpinner;
     private javax.swing.JLabel inputFilesLabel;
     private javax.swing.JLabel inputStatusLabel;
     private javax.swing.JButton okButton;
-    private javax.swing.JLabel outputFileLabel;
-    private javax.swing.JLabel outputStatusLabel;
     private javax.swing.JButton selectInputFilesButton;
-    private javax.swing.JButton selectOutputFileButton;
     private javax.swing.JLabel sheetIndexLabel;
     private schoolalyzer.ui.NumberSpinner sheetIndexSpinner;
     private javax.swing.JLabel startColLabel;

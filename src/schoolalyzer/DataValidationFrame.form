@@ -28,43 +28,43 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="okButton" alignment="1" pref="604" max="32767" attributes="0"/>
-                  <Group type="102" alignment="0" attributes="0">
+                  <Component id="startColLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="inputFilesLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="outputFileLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="colCountLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="sheetIndexLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="startRowLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="startColLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="sheetIndexSpinner" alignment="1" pref="465" max="32767" attributes="0"/>
+                          <Component id="startRowSpinner" alignment="1" pref="465" max="32767" attributes="0"/>
+                          <Component id="startColSpinner" alignment="0" pref="465" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="inputFilesLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
+                      <Component id="selectInputFilesButton" min="-2" max="-2" attributes="1"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="inputStatusLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="colCountLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="colCountSpinner" pref="464" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+                  </Group>
+                  <Component id="okButton" alignment="1" pref="604" max="32767" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="constraintsLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="Spalte" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="1" attributes="0">
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="startColSpinner" alignment="0" pref="459" max="32767" attributes="0"/>
-                                  <Component id="colCountSpinner" alignment="0" pref="459" max="32767" attributes="0"/>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Group type="103" groupAlignment="1" attributes="0">
-                                          <Component id="selectOutputFileButton" min="-2" max="-2" attributes="1"/>
-                                          <Component id="selectInputFilesButton" alignment="1" min="-2" max="-2" attributes="1"/>
-                                      </Group>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="inputStatusLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="outputStatusLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                              </Group>
-                              <EmptySpace min="20" pref="20" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="1" attributes="0">
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="sheetIndexSpinner" alignment="1" pref="459" max="32767" attributes="0"/>
-                                  <Component id="startRowSpinner" alignment="1" pref="459" max="32767" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
-                          </Group>
+                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                          <Component id="currentColumnConstraintComboBox" alignment="0" max="32767" attributes="1"/>
+                          <Component id="currentColumnSpinner" alignment="0" pref="123" max="32767" attributes="1"/>
                       </Group>
                   </Group>
               </Group>
@@ -103,13 +103,15 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="selectOutputFileButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="outputFileLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="outputStatusLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="constraintsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="Spalte" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="currentColumnSpinner" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
+              <Component id="currentColumnConstraintComboBox" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="25" max="32767" attributes="0"/>
               <Component id="okButton" min="-2" max="-2" attributes="1"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -120,16 +122,11 @@
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/schoolalyzer/icons/task-complete.png"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Zusammenf&#xfc;hren"/>
+        <Property name="text" type="java.lang.String" value="&#xdc;berpr&#xfc;fen"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="okButtonActionPerformed"/>
       </Events>
-    </Component>
-    <Component class="javax.swing.JLabel" name="outputFileLabel">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Ausgabedatei:"/>
-      </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="selectInputFilesButton">
       <Properties>
@@ -151,22 +148,6 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Bitte Eingabedateien laden!"/>
       </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="outputStatusLabel">
-      <Properties>
-        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/schoolalyzer/icons/dialog-information.png"/>
-        </Property>
-        <Property name="text" type="java.lang.String" value="Bitte Ausgabedatei ausw&#xe4;hlen !"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JButton" name="selectOutputFileButton">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Ausw&#xe4;hlen"/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="selectOutputFileButtonActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="startRowLabel">
       <Properties>
@@ -216,6 +197,33 @@
         <Property name="intValue" type="int" value="1"/>
         <Property name="minimum" type="java.lang.Comparable" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="new Integer(1)" type="code"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="constraintsLabel">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Ubuntu" size="15" style="1"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Bedingungen:"/>
+      </Properties>
+    </Component>
+    <Component class="schoolalyzer.ui.NumberSpinner" name="currentColumnSpinner">
+    </Component>
+    <Component class="javax.swing.JLabel" name="Spalte">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Spalte:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="currentColumnConstraintComboBox">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="4">
+            <StringItem index="0" value="Item 1"/>
+            <StringItem index="1" value="Item 2"/>
+            <StringItem index="2" value="Item 3"/>
+            <StringItem index="3" value="Item 4"/>
+          </StringArray>
         </Property>
       </Properties>
     </Component>
