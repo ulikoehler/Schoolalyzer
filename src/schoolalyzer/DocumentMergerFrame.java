@@ -89,7 +89,7 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
         colCountSpinner = new schoolalyzer.ui.NumberSpinner();
 
         setTitle("Schoolalyzer - Dokumente zusammenführen");
-        setIconImage(SchoolalyzerFrame.piIcon.getImage());
+        setIconImage(CalculationFrame.piIcon.getImage());
 
         okButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/schoolalyzer/icons/task-complete.png"))); // NOI18N
         okButton.setText("Zusammenführen");
@@ -221,11 +221,11 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
 
         outputWorkbook = new HSSFWorkbook();
         if (!outputSet) {
-            JOptionPane.showMessageDialog(this, "Bitte Ausgabedatei setzen!", "Ausgabedatei nicht gesetzt", JOptionPane.ERROR_MESSAGE, SchoolalyzerFrame.errorIcon);
+            JOptionPane.showMessageDialog(this, "Bitte Ausgabedatei setzen!", "Ausgabedatei nicht gesetzt", JOptionPane.ERROR_MESSAGE, CalculationFrame.errorIcon);
             return;
         }
         if (!inputsSet) {
-            JOptionPane.showMessageDialog(this, "Bitte Eingabedateien laden!", "Eingabedateien nicht geladen", JOptionPane.ERROR_MESSAGE, SchoolalyzerFrame.errorIcon);
+            JOptionPane.showMessageDialog(this, "Bitte Eingabedateien laden!", "Eingabedateien nicht geladen", JOptionPane.ERROR_MESSAGE, CalculationFrame.errorIcon);
             return;
         }
         //Get the output sheet
@@ -269,10 +269,10 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
             //Save the output workbook
             saveOutputWorkbook();
         } catch (IOException ex) {
-            JOptionPane.showMessageDialog(this, "Fehler beim Schreiben des Dokuments: " + ex.getLocalizedMessage(), "Schreibfehler", JOptionPane.ERROR_MESSAGE, SchoolalyzerFrame.errorIcon);
+            JOptionPane.showMessageDialog(this, "Fehler beim Schreiben des Dokuments: " + ex.getLocalizedMessage(), "Schreibfehler", JOptionPane.ERROR_MESSAGE, CalculationFrame.errorIcon);
 
         }
-        JOptionPane.showMessageDialog(this, "Die Berechnung wurde erfolgreich abgeschlossen!", "Erfolg", JOptionPane.INFORMATION_MESSAGE, SchoolalyzerFrame.okIcon);
+        JOptionPane.showMessageDialog(this, "Die Berechnung wurde erfolgreich abgeschlossen!", "Erfolg", JOptionPane.INFORMATION_MESSAGE, CalculationFrame.okIcon);
 }//GEN-LAST:event_okButtonActionPerformed
 
     private void selectInputFilesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectInputFilesButtonActionPerformed
@@ -292,20 +292,20 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
                 inputWorkbooks.add(POIUtil.loadWorkbook(dataFile));
             }
         } catch (IOException ex) {
-            inputStatusLabel.setIcon(SchoolalyzerFrame.errorIcon);
+            inputStatusLabel.setIcon(CalculationFrame.errorIcon);
             inputStatusLabel.setText("Eingabefehler - bitte Vorlage erneut laden!");
             inputsSet = false;
             return;
         } catch (InvalidFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Fehler beim Lesen der Vorlage: Das Dateiformat wird nicht unterstützt: " + ex.getLocalizedMessage(), "Format nicht unterstützt", JOptionPane.ERROR_MESSAGE, SchoolalyzerFrame.errorIcon);
-            inputStatusLabel.setIcon(SchoolalyzerFrame.errorIcon);
+            JOptionPane.showMessageDialog(this, "Fehler beim Lesen der Vorlage: Das Dateiformat wird nicht unterstützt: " + ex.getLocalizedMessage(), "Format nicht unterstützt", JOptionPane.ERROR_MESSAGE, CalculationFrame.errorIcon);
+            inputStatusLabel.setIcon(CalculationFrame.errorIcon);
             inputStatusLabel.setText("Formatfehler - bitte Vorlage erneut laden!");
             inputsSet = false;
             return;
         }
         //Set the status message
         inputsSet = true;
-        inputStatusLabel.setIcon(SchoolalyzerFrame.okIcon);
+        inputStatusLabel.setIcon(CalculationFrame.okIcon);
         inputStatusLabel.setText(dataFiles.length + " Eingabedateien erfolgreich geladen");
 }//GEN-LAST:event_selectInputFilesButtonActionPerformed
 
@@ -325,12 +325,12 @@ public class DocumentMergerFrame extends javax.swing.JFrame {
             tempOutputFile.delete();
         }
         if (!tempOutputFile.canWrite() && (!tempOutputFile.exists() && !tempOutputFile.getParentFile().canWrite())) {
-            JOptionPane.showMessageDialog(this, "In diese Datei kann nicht geschrieben werden! Bitte andere Ausgabedatei wählen!", "Schreiben nicht erlaubt", JOptionPane.ERROR_MESSAGE, SchoolalyzerFrame.errorIcon);
+            JOptionPane.showMessageDialog(this, "In diese Datei kann nicht geschrieben werden! Bitte andere Ausgabedatei wählen!", "Schreiben nicht erlaubt", JOptionPane.ERROR_MESSAGE, CalculationFrame.errorIcon);
             return;
         }
         //Everything's OK, so set the status label and the output file member variable
         outputWorkbookFile = tempOutputFile;
-        outputStatusLabel.setIcon(SchoolalyzerFrame.okIcon);
+        outputStatusLabel.setIcon(CalculationFrame.okIcon);
         outputStatusLabel.setText("Ausgabedatei erfolgreich gesetzt");
         outputSet = true;
 }//GEN-LAST:event_selectOutputFileButtonActionPerformed

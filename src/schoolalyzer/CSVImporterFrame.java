@@ -105,7 +105,7 @@ public class CSVImporterFrame extends javax.swing.JFrame {
         apostropheEncloseCheckbox = new javax.swing.JCheckBox();
 
         setTitle("Schoolalyzer - CSV importieren");
-        setIconImage(SchoolalyzerFrame.piIcon.getImage());
+        setIconImage(CalculationFrame.piIcon.getImage());
         setResizable(false);
 
         templateFileLabel.setText("Vorlage:");
@@ -250,19 +250,19 @@ public class CSVImporterFrame extends javax.swing.JFrame {
         //If the action does not succeed, the users sees the standard message
         templateSet = false;
         templateStatusLabel.setText("Bitte Vorlage laden!");
-        templateStatusLabel.setIcon(SchoolalyzerFrame.informationIcon);
+        templateStatusLabel.setIcon(CalculationFrame.informationIcon);
         //Load the template
         try {
             outputWorkbook = POIUtil.loadWorkbook(templateFile); //There is no separate templateWorkbook variable because the only use of the template file is to provide empty fields for the output
-            templateStatusLabel.setIcon(SchoolalyzerFrame.okIcon);
+            templateStatusLabel.setIcon(CalculationFrame.okIcon);
             templateStatusLabel.setText("Vorlage erfolgreich geladen");
             templateSet = true;
         } catch (IOException ex) {
-            templateStatusLabel.setIcon(SchoolalyzerFrame.errorIcon);
+            templateStatusLabel.setIcon(CalculationFrame.errorIcon);
             templateStatusLabel.setText("Eingabefehler - bitte Vorlage erneut laden!");
         } catch (InvalidFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Fehler beim Lesen der Vorlage: Das Dateiformat wird nicht unterstützt: " + ex.getLocalizedMessage(), "Format nicht unterstützt", JOptionPane.ERROR_MESSAGE, SchoolalyzerFrame.errorIcon);
-            templateStatusLabel.setIcon(SchoolalyzerFrame.errorIcon);
+            JOptionPane.showMessageDialog(this, "Fehler beim Lesen der Vorlage: Das Dateiformat wird nicht unterstützt: " + ex.getLocalizedMessage(), "Format nicht unterstützt", JOptionPane.ERROR_MESSAGE, CalculationFrame.errorIcon);
+            templateStatusLabel.setIcon(CalculationFrame.errorIcon);
             templateStatusLabel.setText("Formatfehler - bitte Vorlage erneut laden!");
         }
 }//GEN-LAST:event_selectTemplateButtonActionPerformed
@@ -282,7 +282,7 @@ public class CSVImporterFrame extends javax.swing.JFrame {
         inputFiles = Arrays.asList(dataFiles);
         //Set the status message
         inputsSet = true;
-        inputStatusLabel.setIcon(SchoolalyzerFrame.okIcon);
+        inputStatusLabel.setIcon(CalculationFrame.okIcon);
         inputStatusLabel.setText(inputFiles.size() + " Eingabedateien erfolgreich geladen");
 }//GEN-LAST:event_selectInputFilesButtonActionPerformed
 
@@ -300,12 +300,12 @@ public class CSVImporterFrame extends javax.swing.JFrame {
             }
         }
         if (!tempOutputFile.canWrite() && (!tempOutputFile.exists() && !tempOutputFile.getParentFile().canWrite())) {
-            JOptionPane.showMessageDialog(this, "In diese Datei kann nicht geschrieben werden! Bitte andere Ausgabedatei wählen!", "Schreiben nicht erlaubt", JOptionPane.ERROR_MESSAGE, SchoolalyzerFrame.errorIcon);
+            JOptionPane.showMessageDialog(this, "In diese Datei kann nicht geschrieben werden! Bitte andere Ausgabedatei wählen!", "Schreiben nicht erlaubt", JOptionPane.ERROR_MESSAGE, CalculationFrame.errorIcon);
             return;
         }
         //Everything's OK, so set the status label and the output file member variable
         outputWorkbookFile = tempOutputFile;
-        outputStatusLabel.setIcon(SchoolalyzerFrame.okIcon);
+        outputStatusLabel.setIcon(CalculationFrame.okIcon);
         outputStatusLabel.setText("Ausgabedatei erfolgreich gesetzt");
         outputSet = true;
 }//GEN-LAST:event_selectOutputFileButtonActionPerformed
@@ -372,11 +372,11 @@ public class CSVImporterFrame extends javax.swing.JFrame {
             outputWorkbook = new HSSFWorkbook();
         }
         if (!outputSet) {
-            JOptionPane.showMessageDialog(this, "Bitte Ausgabedatei setzen!", "Ausgabedatei nicht gesetzt", JOptionPane.ERROR_MESSAGE, SchoolalyzerFrame.errorIcon);
+            JOptionPane.showMessageDialog(this, "Bitte Ausgabedatei setzen!", "Ausgabedatei nicht gesetzt", JOptionPane.ERROR_MESSAGE, CalculationFrame.errorIcon);
             return;
         }
         if (!inputsSet) {
-            JOptionPane.showMessageDialog(this, "Bitte Eingabedateien laden!", "Eingabedateien nicht geladen", JOptionPane.ERROR_MESSAGE, SchoolalyzerFrame.errorIcon);
+            JOptionPane.showMessageDialog(this, "Bitte Eingabedateien laden!", "Eingabedateien nicht geladen", JOptionPane.ERROR_MESSAGE, CalculationFrame.errorIcon);
             return;
         }
         try {
@@ -412,15 +412,15 @@ public class CSVImporterFrame extends javax.swing.JFrame {
                     nextRows.put(name, handleCSVFile(name, new BufferedInputStream(new FileInputStream(inputFile)), nextRows.get(name)));
 
                 } else {
-                    JOptionPane.showMessageDialog(this, "Unbekannte Dateinamenserweiterung: " + inputFile.getName(), "Unbekannte Erweiterung", JOptionPane.ERROR_MESSAGE, SchoolalyzerFrame.errorIcon);
+                    JOptionPane.showMessageDialog(this, "Unbekannte Dateinamenserweiterung: " + inputFile.getName(), "Unbekannte Erweiterung", JOptionPane.ERROR_MESSAGE, CalculationFrame.errorIcon);
 
                 }
             }
             //Save the output workbook
             saveOutputWorkbook();
-            JOptionPane.showMessageDialog(this, "Die Berechnung wurde erfolgreich abgeschlossen!", "Erfolg", JOptionPane.INFORMATION_MESSAGE, SchoolalyzerFrame.okIcon);
+            JOptionPane.showMessageDialog(this, "Die Berechnung wurde erfolgreich abgeschlossen!", "Erfolg", JOptionPane.INFORMATION_MESSAGE, CalculationFrame.okIcon);
         } catch (IOException ex) {
-            JOptionPane.showMessageDialog(this, "Fehler beim Schreiben des Dokuments: " + ex.getLocalizedMessage(), "Schreibfehler", JOptionPane.ERROR_MESSAGE, SchoolalyzerFrame.errorIcon);
+            JOptionPane.showMessageDialog(this, "Fehler beim Schreiben des Dokuments: " + ex.getLocalizedMessage(), "Schreibfehler", JOptionPane.ERROR_MESSAGE, CalculationFrame.errorIcon);
         }
 }//GEN-LAST:event_applyButtonActionPerformed
 

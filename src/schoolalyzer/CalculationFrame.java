@@ -30,17 +30,17 @@ import schoolalyzer.util.POIUtil;
  *
  * @author uli
  */
-public class SchoolalyzerFrame extends javax.swing.JFrame {
+public class CalculationFrame extends javax.swing.JFrame {
 
     private HashMap<Workbook, String> inputWorkbooks = new HashMap<Workbook, String>(); //Maps the worbook to the filename (not path!) it was loaded from
     private Workbook outputWorkbook = null;
     private File outputWorkbookFile = null;
     //Icons
-    public static ImageIcon informationIcon = new ImageIcon(SchoolalyzerFrame.class.getResource("/schoolalyzer/icons/dialog-information.png"));
-    public static ImageIcon warningIcon = new ImageIcon(SchoolalyzerFrame.class.getResource("/schoolalyzer/icons/dialog-warning.png"));
-    public static ImageIcon errorIcon = new ImageIcon(SchoolalyzerFrame.class.getResource("/schoolalyzer/icons/dialog-error.png"));
-    public static ImageIcon okIcon = new ImageIcon(SchoolalyzerFrame.class.getResource("/schoolalyzer/icons/task-complete.png"));
-    public static ImageIcon piIcon = new ImageIcon(SchoolalyzerFrame.class.getResource("/schoolalyzer/icons/preferences-kcalc-constants.png"));
+    public static ImageIcon informationIcon = new ImageIcon(CalculationFrame.class.getResource("/schoolalyzer/icons/dialog-information.png"));
+    public static ImageIcon warningIcon = new ImageIcon(CalculationFrame.class.getResource("/schoolalyzer/icons/dialog-warning.png"));
+    public static ImageIcon errorIcon = new ImageIcon(CalculationFrame.class.getResource("/schoolalyzer/icons/dialog-error.png"));
+    public static ImageIcon okIcon = new ImageIcon(CalculationFrame.class.getResource("/schoolalyzer/icons/task-complete.png"));
+    public static ImageIcon piIcon = new ImageIcon(CalculationFrame.class.getResource("/schoolalyzer/icons/preferences-kcalc-constants.png"));
     //File choosers
     private JFileChooser outputChooser = new JFileChooser();
     private JFileChooser templateChooser = new JFileChooser();
@@ -48,15 +48,13 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
     //Actions
     private HashMap<String, LinkedList<AbstractCellAction>> actions = new HashMap<String, LinkedList<AbstractCellAction>>();
     //Logging
-    private static final Logger logger = Logger.getLogger(SchoolalyzerFrame.class.getName());
+    private static final Logger logger = Logger.getLogger(CalculationFrame.class.getName());
     //Status variables
     boolean templateSet = false;
     boolean inputsSet = false;
     boolean outputSet = false;
-    //Frames
+
     private ActionListFrame actionListFrame = new ActionListFrame();
-    private CSVImporterFrame csvImporterFrame = new CSVImporterFrame();
-    private DocumentMergerFrame documentMergerFrame = new DocumentMergerFrame();
 
     public HashMap<String, LinkedList<AbstractCellAction>> getActions() {
         return actions;
@@ -90,7 +88,7 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
     }
 
     /** Creates new form SchoolalzyerFrame */
-    public SchoolalyzerFrame() {
+    public CalculationFrame() {
         initComponents();
         setLocationRelativeTo(null);
         //Set the current file chooser directory to the current directory
@@ -122,15 +120,8 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
         inputStatusLabel = new javax.swing.JLabel();
         applyButton = new javax.swing.JButton();
         actionListButton = new javax.swing.JButton();
-        menuBar = new javax.swing.JMenuBar();
-        fileMenu = new javax.swing.JMenu();
-        exitMenuItem = new javax.swing.JMenuItem();
-        extrasMenu = new javax.swing.JMenu();
-        importCSVMenuItem = new javax.swing.JMenuItem();
-        mergeDocumentsMenuItem = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Schoolalyzer 2.6.1");
+        setTitle("Schoolalyzer - Berechnungen durchführen");
         setIconImage(piIcon.getImage());
 
         inputFilesLabel.setText("Eingabedateien:");
@@ -184,42 +175,6 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
             }
         });
 
-        fileMenu.setText("Datei");
-
-        exitMenuItem.setText("Beenden");
-        exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                exitMenuItemActionPerformed(evt);
-            }
-        });
-        fileMenu.add(exitMenuItem);
-
-        menuBar.add(fileMenu);
-
-        extrasMenu.setText("Extras");
-
-        importCSVMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.CTRL_MASK));
-        importCSVMenuItem.setText("CSV-Importer");
-        importCSVMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                importCSVMenuItemActionPerformed(evt);
-            }
-        });
-        extrasMenu.add(importCSVMenuItem);
-
-        mergeDocumentsMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_M, java.awt.event.InputEvent.CTRL_MASK));
-        mergeDocumentsMenuItem.setText("Tabellen zusammenführen");
-        mergeDocumentsMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mergeDocumentsMenuItemActionPerformed(evt);
-            }
-        });
-        extrasMenu.add(mergeDocumentsMenuItem);
-
-        menuBar.add(extrasMenu);
-
-        setJMenuBar(menuBar);
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -231,7 +186,7 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
                         .addComponent(actionListButton, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 895, Short.MAX_VALUE)
                         .addComponent(applyButton))
-                    .addComponent(tablesTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1221, Short.MAX_VALUE)
+                    .addComponent(tablesTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1237, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(inputFilesLabel)
@@ -268,7 +223,7 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
                     .addComponent(outputFileLabel)
                     .addComponent(outputStatusLabel))
                 .addGap(18, 18, 18)
-                .addComponent(tablesTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 720, Short.MAX_VALUE)
+                .addComponent(tablesTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 747, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(actionListButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -448,18 +403,6 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
         actionListFrame.setVisible(true);
     }//GEN-LAST:event_actionListButtonActionPerformed
 
-    private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
-        System.exit(0);
-    }//GEN-LAST:event_exitMenuItemActionPerformed
-
-    private void importCSVMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importCSVMenuItemActionPerformed
-        csvImporterFrame.setVisible(true);
-    }//GEN-LAST:event_importCSVMenuItemActionPerformed
-
-    private void mergeDocumentsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mergeDocumentsMenuItemActionPerformed
-        documentMergerFrame.setVisible(true);
-    }//GEN-LAST:event_mergeDocumentsMenuItemActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -468,21 +411,15 @@ public class SchoolalyzerFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                new SchoolalyzerFrame().setVisible(true);
+                new CalculationFrame().setVisible(true);
             }
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton actionListButton;
     private javax.swing.JButton applyButton;
-    private javax.swing.JMenuItem exitMenuItem;
-    private javax.swing.JMenu extrasMenu;
-    private javax.swing.JMenu fileMenu;
-    private javax.swing.JMenuItem importCSVMenuItem;
     private javax.swing.JLabel inputFilesLabel;
     private javax.swing.JLabel inputStatusLabel;
-    private javax.swing.JMenuBar menuBar;
-    private javax.swing.JMenuItem mergeDocumentsMenuItem;
     private javax.swing.JLabel outputFileLabel;
     private javax.swing.JLabel outputStatusLabel;
     private javax.swing.JButton selectInputFilesButton;

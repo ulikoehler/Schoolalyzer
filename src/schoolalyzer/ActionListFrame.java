@@ -28,7 +28,7 @@ import schoolalyzer.util.SchoolalyzerUtil;
  */
 public class ActionListFrame extends javax.swing.JFrame {
 
-    private SchoolalyzerFrame parentFrame = null;
+    private CalculationFrame parentFrame = null;
 
     /** Creates new form actionListFrame */
     public ActionListFrame() {
@@ -40,13 +40,13 @@ public class ActionListFrame extends javax.swing.JFrame {
         tree.setModel(getModel());
     }
 
-    public void setParentFrame(SchoolalyzerFrame parentFrame) {
+    public void setParentFrame(CalculationFrame parentFrame) {
         this.parentFrame = parentFrame;
         tree.setModel(getModel());
         //Add the popup menu
         JPopupMenu treePopupMenu = new JPopupMenu();
         JMenuItem deleteMenuItem = new JMenuItem("Löschen");
-        final SchoolalyzerFrame finalParent = parentFrame;
+        final CalculationFrame finalParent = parentFrame;
         deleteMenuItem.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
@@ -94,7 +94,7 @@ public class ActionListFrame extends javax.swing.JFrame {
         tree = new javax.swing.JTree();
 
         setTitle("Schoolalyzer - Berechnungen");
-        setIconImage(SchoolalyzerFrame.piIcon.getImage());
+        setIconImage(CalculationFrame.piIcon.getImage());
         setLocationByPlatform(true);
 
         treeScrollPane.setViewportView(tree);

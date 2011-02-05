@@ -124,7 +124,7 @@ public class DataValidationFrame extends javax.swing.JFrame {
         constraintParameterField = new javax.swing.JTextField();
 
         setTitle("Schoolalyzer - Dokumente zusammenführen");
-        setIconImage(SchoolalyzerFrame.piIcon.getImage());
+        setIconImage(CalculationFrame.piIcon.getImage());
 
         okButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/schoolalyzer/icons/task-complete.png"))); // NOI18N
         okButton.setText("Überprüfen");
@@ -294,7 +294,7 @@ public class DataValidationFrame extends javax.swing.JFrame {
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         if (!inputsSet) {
-            JOptionPane.showMessageDialog(this, "Bitte Eingabedateien laden!", "Eingabedateien nicht geladen", JOptionPane.ERROR_MESSAGE, SchoolalyzerFrame.errorIcon);
+            JOptionPane.showMessageDialog(this, "Bitte Eingabedateien laden!", "Eingabedateien nicht geladen", JOptionPane.ERROR_MESSAGE, CalculationFrame.errorIcon);
             return;
         }
         LoggingFrame loggingFrame = new LoggingFrame();
@@ -345,7 +345,7 @@ public class DataValidationFrame extends javax.swing.JFrame {
                 currentInputRowIndex++;
             }
         }
-        JOptionPane.showMessageDialog(this, "Die Überprüfung verlief ohne Fehler!", "Erfolg", JOptionPane.INFORMATION_MESSAGE, SchoolalyzerFrame.okIcon);
+        JOptionPane.showMessageDialog(this, "Die Überprüfung verlief ohne Fehler!", "Erfolg", JOptionPane.INFORMATION_MESSAGE, CalculationFrame.okIcon);
 }//GEN-LAST:event_okButtonActionPerformed
 
     private void selectInputFilesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectInputFilesButtonActionPerformed
@@ -367,20 +367,20 @@ public class DataValidationFrame extends javax.swing.JFrame {
                 workbookToFilename.put(workbook, dataFile.getName());
             }
         } catch (IOException ex) {
-            inputStatusLabel.setIcon(SchoolalyzerFrame.errorIcon);
+            inputStatusLabel.setIcon(CalculationFrame.errorIcon);
             inputStatusLabel.setText("Eingabefehler - bitte Vorlage erneut laden!");
             inputsSet = false;
             return;
         } catch (InvalidFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Fehler beim Lesen der Vorlage: Das Dateiformat wird nicht unterstützt: " + ex.getLocalizedMessage(), "Format nicht unterstützt", JOptionPane.ERROR_MESSAGE, SchoolalyzerFrame.errorIcon);
-            inputStatusLabel.setIcon(SchoolalyzerFrame.errorIcon);
+            JOptionPane.showMessageDialog(this, "Fehler beim Lesen der Vorlage: Das Dateiformat wird nicht unterstützt: " + ex.getLocalizedMessage(), "Format nicht unterstützt", JOptionPane.ERROR_MESSAGE, CalculationFrame.errorIcon);
+            inputStatusLabel.setIcon(CalculationFrame.errorIcon);
             inputStatusLabel.setText("Formatfehler - bitte Vorlage erneut laden!");
             inputsSet = false;
             return;
         }
         //Set the status message
         inputsSet = true;
-        inputStatusLabel.setIcon(SchoolalyzerFrame.okIcon);
+        inputStatusLabel.setIcon(CalculationFrame.okIcon);
         inputStatusLabel.setText(dataFiles.length + " Eingabedateien erfolgreich geladen");
 }//GEN-LAST:event_selectInputFilesButtonActionPerformed
 

@@ -18,7 +18,7 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.TableColumnModel;
 import org.apache.poi.ss.usermodel.Sheet;
-import schoolalyzer.SchoolalyzerFrame;
+import schoolalyzer.CalculationFrame;
 import schoolalyzer.actions.ActionManager;
 import schoolalyzer.util.POIUtil;
 
@@ -29,14 +29,14 @@ import schoolalyzer.util.POIUtil;
 public class ExcelTablePanel extends javax.swing.JPanel {
 
     private Sheet sheet = null;
-    private SchoolalyzerFrame parentFrame = null;
+    private CalculationFrame parentFrame = null;
 
     /** Creates new form ExcelTablePanel */
     public ExcelTablePanel() {
         initComponents();
     }
 
-    public void setParentFrame(SchoolalyzerFrame parentFrame) {
+    public void setParentFrame(CalculationFrame parentFrame) {
         this.parentFrame = parentFrame;
     }
 
