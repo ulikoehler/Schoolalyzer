@@ -10,14 +10,11 @@
  */
 package schoolalyzer;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 import java.util.logging.Logger;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -25,6 +22,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SpinnerListModel;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import schoolalyzer.ui.ExcelColumnNameList;
@@ -44,7 +42,37 @@ public class DataValidationFrame extends javax.swing.JFrame {
     boolean inputsSet = false;
     //IO data
     private List<Workbook> inputWorkbooks = new LinkedList<Workbook>();
-    private File outputWorkbookFile = null;
+    private HashMap<Workbook, String> workbookToFilename = new HashMap<Workbook, String>();
+    //Constraints
+    private HashMap<Integer, Constraint> constraints = new HashMap<Integer, Constraint>();
+    private Constraint currentConstraint = null;
+
+    private class Constraint {
+
+        public String name = null;
+        public String param = null;
+
+        public Constraint(String name, String param) {
+            this.name = name;
+            this.param = param;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getParam() {
+            return param;
+        }
+
+        public void setParam(String param) {
+            this.param = param;
+        }
+    }
 
     /** Creates new form DocumentMergerFrame */
     public DataValidationFrame() {
@@ -53,16 +81,7 @@ public class DataValidationFrame extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }
 
-    /**
-     * Saves the output workbook in the output file
-     */
-    private void saveOutputWorkbook() throws IOException {
-        OutputStream os = new BufferedOutputStream(new FileOutputStream(outputWorkbookFile));
-        os.close();
-    }
-
-    private ComboBoxModel getConstraintsModel()
-    {
+    private ComboBoxModel getConstraintsModel() {
         List<String> list = new LinkedList<String>();
         list.add("Keine");
         list.add("Nichtleer");
@@ -70,6 +89,8 @@ public class DataValidationFrame extends javax.swing.JFrame {
         list.add("Zahl");
         list.add("Kleiner als");
         list.add("Größer als");
+        list.add("Ist");
+        list.add("Ist nicht");
         return new DefaultComboBoxModel(list.toArray(new String[list.size()]));
     }
 
@@ -97,7 +118,10 @@ public class DataValidationFrame extends javax.swing.JFrame {
         constraintsLabel = new javax.swing.JLabel();
         currentColumnSpinner = new schoolalyzer.ui.NumberSpinner();
         Spalte = new javax.swing.JLabel();
-        currentColumnConstraintComboBox = new javax.swing.JComboBox();
+        constraintTypeComboBox = new javax.swing.JComboBox();
+        constraintLabel = new javax.swing.JLabel();
+        parameterLabel = new javax.swing.JLabel();
+        constraintParameterField = new javax.swing.JTextField();
 
         setTitle("Schoolalyzer - Dokumente zusammenführen");
         setIconImage(SchoolalyzerFrame.piIcon.getImage());
@@ -140,13 +164,40 @@ public class DataValidationFrame extends javax.swing.JFrame {
 
         colCountSpinner.setIntValue(1);
         colCountSpinner.setMinimum(new Integer(1));
+        colCountSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                colCountSpinnerStateChanged(evt);
+            }
+        });
 
-        constraintsLabel.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        constraintsLabel.setFont(new java.awt.Font("Ubuntu", 1, 15));
         constraintsLabel.setText("Bedingungen:");
+
+        currentColumnSpinner.setValue(1);
+        currentColumnSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                currentColumnSpinnerStateChanged(evt);
+            }
+        });
 
         Spalte.setText("Spalte:");
 
-        currentColumnConstraintComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        constraintTypeComboBox.setModel(getConstraintsModel());
+        constraintTypeComboBox.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                constraintTypeComboBoxPropertyChange(evt);
+            }
+        });
+
+        constraintLabel.setText("Bedingung:");
+
+        parameterLabel.setText("Parameter:");
+
+        constraintParameterField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                constraintParameterFieldPropertyChange(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -162,9 +213,9 @@ public class DataValidationFrame extends javax.swing.JFrame {
                             .addComponent(startRowLabel))
                         .addGap(22, 22, 22)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(sheetIndexSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 465, Short.MAX_VALUE)
-                            .addComponent(startRowSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 465, Short.MAX_VALUE)
-                            .addComponent(startColSpinner, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 465, Short.MAX_VALUE))
+                            .addComponent(sheetIndexSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 482, Short.MAX_VALUE)
+                            .addComponent(startRowSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 482, Short.MAX_VALUE)
+                            .addComponent(startColSpinner, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 482, Short.MAX_VALUE))
                         .addGap(20, 20, 20))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(inputFilesLabel)
@@ -173,20 +224,29 @@ public class DataValidationFrame extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(inputStatusLabel)
                         .addGap(47, 47, 47))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(colCountLabel)
-                        .addGap(18, 18, 18)
-                        .addComponent(colCountSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 464, Short.MAX_VALUE)
-                        .addGap(20, 20, 20))
                     .addComponent(okButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 604, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(constraintsLabel)
-                        .addGap(18, 18, 18)
-                        .addComponent(Spalte)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(currentColumnConstraintComboBox, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(currentColumnSpinner, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(constraintsLabel)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(Spalte))
+                                    .addComponent(constraintLabel))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(constraintTypeComboBox, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(currentColumnSpinner, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(parameterLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(constraintParameterField, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(colCountLabel)
+                                .addGap(18, 18, 18)
+                                .addComponent(colCountSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 486, Short.MAX_VALUE)))
+                        .addGap(20, 20, 20)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -219,7 +279,11 @@ public class DataValidationFrame extends javax.swing.JFrame {
                     .addComponent(Spalte)
                     .addComponent(currentColumnSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(currentColumnConstraintComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(constraintTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(constraintLabel)
+                    .addComponent(parameterLabel)
+                    .addComponent(constraintParameterField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
                 .addComponent(okButton)
                 .addContainerGap())
@@ -233,12 +297,16 @@ public class DataValidationFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Bitte Eingabedateien laden!", "Eingabedateien nicht geladen", JOptionPane.ERROR_MESSAGE, SchoolalyzerFrame.errorIcon);
             return;
         }
+        LoggingFrame loggingFrame = new LoggingFrame();
         //Read the start and the stop row
         int colCount = colCountSpinner.getIntValue();
         int sheetNum = sheetIndexSpinner.getIntValue() - 1;
         int startRow = startRowSpinner.getIntValue() - 1; //-1: 1-based must be converted to 0-based
         int startCol = POIUtil.getColumnNumber(((SpinnerListModel) startColSpinner.getModel()).getValue().toString());
+        long violationCounter = 0;
         for (Workbook inputWorkbook : inputWorkbooks) {
+            String filename = workbookToFilename.get(inputWorkbook);
+            loggingFrame.appendLine("Datei: " + filename);
             Sheet inputSheet = inputWorkbook.getSheetAt(sheetNum);
             int currentInputRowIndex = startRow;
             while (true) { //Iterate over all rows
@@ -257,19 +325,27 @@ public class DataValidationFrame extends javax.swing.JFrame {
                 int currentInputColIndex = startCol;
                 for (int i = 0; i < colCount; i++) { //Iterate over the columns in the current row until one is empty
                     //The cell is not empty --> copy the value into the output document
-                    
+                    Cell cell = POIUtil.getCellSafe(inputSheet, currentInputColIndex, currentInputRowIndex);
+                    Constraint constraint = constraints.get(currentInputColIndex);
+                    if (constraint.getName().equals("Keine")) {
+                    } else if (constraint.getName().equals("Nichtleer")) {
+                        if(POIUtil.isEmpty(inputSheet, currentInputRowIndex, i))
+                        {
+                            violationCounter++;
+                            
+                        }
+                    } else if (constraint.getName().equals("Leer")) {
+                    } else if (constraint.getName().equals("Zahl")) {
+                    } else if (constraint.getName().equals("Kleiner als")) {
+                    } else if (constraint.getName().equals("Größer als")) {
+                    } else if (constraint.getName().equals("Ist")) {
+                    } else if (constraint.getName().equals("Ist nicht")) {
+                    }
                 }
                 currentInputRowIndex++;
             }
         }
-        try {
-            //Save the output workbook
-            saveOutputWorkbook();
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(this, "Fehler beim Schreiben des Dokuments: " + ex.getLocalizedMessage(), "Schreibfehler", JOptionPane.ERROR_MESSAGE, SchoolalyzerFrame.errorIcon);
-
-        }
-        JOptionPane.showMessageDialog(this, "Die Berechnung wurde erfolgreich abgeschlossen!", "Erfolg", JOptionPane.INFORMATION_MESSAGE, SchoolalyzerFrame.okIcon);
+        JOptionPane.showMessageDialog(this, "Die Überprüfung verlief ohne Fehler!", "Erfolg", JOptionPane.INFORMATION_MESSAGE, SchoolalyzerFrame.okIcon);
 }//GEN-LAST:event_okButtonActionPerformed
 
     private void selectInputFilesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectInputFilesButtonActionPerformed
@@ -286,7 +362,9 @@ public class DataValidationFrame extends javax.swing.JFrame {
         //Reset the input workbook data
         try {
             for (File dataFile : dataFiles) {
-                inputWorkbooks.add(POIUtil.loadWorkbook(dataFile));
+                Workbook workbook = POIUtil.loadWorkbook(dataFile);
+                inputWorkbooks.add(workbook);
+                workbookToFilename.put(workbook, dataFile.getName());
             }
         } catch (IOException ex) {
             inputStatusLabel.setIcon(SchoolalyzerFrame.errorIcon);
@@ -306,6 +384,40 @@ public class DataValidationFrame extends javax.swing.JFrame {
         inputStatusLabel.setText(dataFiles.length + " Eingabedateien erfolgreich geladen");
 }//GEN-LAST:event_selectInputFilesButtonActionPerformed
 
+    private void colCountSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_colCountSpinnerStateChanged
+        currentColumnSpinner.setMaximum(colCountSpinner.getIntValue());
+    }//GEN-LAST:event_colCountSpinnerStateChanged
+
+    private void currentColumnSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_currentColumnSpinnerStateChanged
+        int currentColumn = currentColumnSpinner.getIntValue();
+        if (constraints.get(currentColumn) == null) {
+            currentConstraint = new Constraint("Keine", "");
+            constraints.put(currentColumn, currentConstraint);
+        } else {
+            currentConstraint = constraints.get(currentColumn);
+        }
+        constraintTypeComboBox.setSelectedItem(currentConstraint.getName());
+        constraintParameterField.setText(currentConstraint.getParam());
+    }//GEN-LAST:event_currentColumnSpinnerStateChanged
+
+    private void constraintTypeComboBoxPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_constraintTypeComboBoxPropertyChange
+        int currentColumn = currentColumnSpinner.getIntValue();
+        if (constraints.get(currentColumn) == null) {
+            currentConstraint = new Constraint("Keiner", null);
+            constraints.put(currentColumn, currentConstraint);
+        }
+        currentConstraint.setName(constraintTypeComboBox.getSelectedItem().toString());
+    }//GEN-LAST:event_constraintTypeComboBoxPropertyChange
+
+    private void constraintParameterFieldPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_constraintParameterFieldPropertyChange
+        int currentColumn = currentColumnSpinner.getIntValue();
+        if (constraints.get(currentColumn) == null) {
+            currentConstraint = new Constraint("Keiner", null);
+            constraints.put(currentColumn, currentConstraint);
+        }
+        currentConstraint.setParam(constraintParameterField.toString());
+    }//GEN-LAST:event_constraintParameterFieldPropertyChange
+
     /**
      * @param args the command line arguments
      */
@@ -321,12 +433,15 @@ public class DataValidationFrame extends javax.swing.JFrame {
     private javax.swing.JLabel Spalte;
     private javax.swing.JLabel colCountLabel;
     private schoolalyzer.ui.NumberSpinner colCountSpinner;
+    private javax.swing.JLabel constraintLabel;
+    private javax.swing.JTextField constraintParameterField;
+    private javax.swing.JComboBox constraintTypeComboBox;
     private javax.swing.JLabel constraintsLabel;
-    private javax.swing.JComboBox currentColumnConstraintComboBox;
     private schoolalyzer.ui.NumberSpinner currentColumnSpinner;
     private javax.swing.JLabel inputFilesLabel;
     private javax.swing.JLabel inputStatusLabel;
     private javax.swing.JButton okButton;
+    private javax.swing.JLabel parameterLabel;
     private javax.swing.JButton selectInputFilesButton;
     private javax.swing.JLabel sheetIndexLabel;
     private schoolalyzer.ui.NumberSpinner sheetIndexSpinner;
