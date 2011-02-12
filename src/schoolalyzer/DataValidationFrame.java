@@ -87,11 +87,25 @@ public class DataValidationFrame extends javax.swing.JFrame {
         list.add("Nichtleer");
         list.add("Leer");
         list.add("Zahl");
+        list.add("Zahl oder leer");
         list.add("Kleiner als");
         list.add("Größer als");
         list.add("Ist");
         list.add("Ist nicht");
         return new DefaultComboBoxModel(list.toArray(new String[list.size()]));
+    }
+
+    private String getConstraintParameterAsString() {
+        return constraintParameterField.getText();
+    }
+
+    private double getConstraintParameterAsDouble() {
+        try {
+            return Double.parseDouble(getConstraintParameterAsString());
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Der Parameter ist keine Zahl!", "Fehler", JOptionPane.ERROR_MESSAGE);
+            throw new IllegalArgumentException(ex);
+        }
     }
 
     /** This method is called from within the constructor to
@@ -308,13 +322,13 @@ public class DataValidationFrame extends javax.swing.JFrame {
             String filename = workbookToFilename.get(inputWorkbook);
             loggingFrame.appendLine("Datei: " + filename);
             Sheet inputSheet = inputWorkbook.getSheetAt(sheetNum);
-            int currentInputRowIndex = startRow;
+            int currentRowIndex = startRow;
             while (true) { //Iterate over all rows
                 //If all columns are empty, break
                 boolean breakRowLoop = true; //Set to true if the loop iterating over all rows shouldn't be broken
                 for (int i = startCol; i < (startCol + colCount); i++) { //Sets breakRowLoop to false if neccessary
                     //System.out.println("Breaking at row " + currentInputRowIndex);
-                    if (!POIUtil.isEmpty(inputSheet, currentInputRowIndex, i)) { //Break only if all cols are empty
+                    if (!POIUtil.isEmpty(inputSheet, currentRowIndex, i)) { //Break only if all cols are empty
                         breakRowLoop = false;
                     }
                 }
@@ -322,30 +336,93 @@ public class DataValidationFrame extends javax.swing.JFrame {
                     break;
                 }
                 //Process the current row
-                int currentInputColIndex = startCol;
-                for (int i = 0; i < colCount; i++) { //Iterate over the columns in the current row until one is empty
-                    //The cell is not empty --> copy the value into the output document
-                    Cell cell = POIUtil.getCellSafe(inputSheet, currentInputColIndex, currentInputRowIndex);
-                    Constraint constraint = constraints.get(currentInputColIndex);
+                int currentColIndex = startCol;
+                for (int i = startCol; i < (startCol + colCount); i++) { //Iterate over the columns in the current row until one is empty
+                    Cell cell = POIUtil.getCellSafe(inputSheet, currentColIndex, i);
+                    Constraint constraint = constraints.get(currentColIndex);
                     if (constraint.getName().equals("Keine")) {
                     } else if (constraint.getName().equals("Nichtleer")) {
-                        if(POIUtil.isEmpty(inputSheet, currentInputRowIndex, i))
-                        {
+                        if (POIUtil.isEmpty(inputSheet, currentRowIndex, i)) {
                             violationCounter++;
-                            
+                            loggingFrame.appendLine("Feld " + POIUtil.getFieldIdentifier(currentColIndex, currentRowIndex) + " ist leer (sollte nicht leer sein)!");
                         }
                     } else if (constraint.getName().equals("Leer")) {
+                        if (!POIUtil.isEmpty(inputSheet, currentRowIndex, i)) {
+                            violationCounter++;
+                            loggingFrame.appendLine("Feld " + POIUtil.getFieldIdentifier(currentColIndex, currentRowIndex) + " ist nicht leer (sollte leer sein)!");
+                        }
                     } else if (constraint.getName().equals("Zahl")) {
+                        if (POIUtil.isEmpty(inputSheet, currentRowIndex, i)) {
+                            violationCounter++;
+                            loggingFrame.appendLine("Feld " + POIUtil.getFieldIdentifier(currentColIndex, currentRowIndex) + " ist leer (sollte Zahl enthalten)!");
+                        } else {
+                            if (!POIUtil.isEmpty(inputSheet, currentRowIndex, i)) {
+                                violationCounter++;
+                                loggingFrame.appendLine("Feld " + POIUtil.getFieldIdentifier(currentColIndex, currentRowIndex) + " ist keine leer (sollte Zahl sein)!");
+                            } else {
+                                try {
+                                    double d = POIUtil.getDoubleCellValueSafe(cell);
+                                } catch (NumberFormatException ex) {
+                                    violationCounter++;
+                                    loggingFrame.appendLine("Feld " + POIUtil.getFieldIdentifier(currentColIndex, currentRowIndex) + " ist keine Zahl!");
+                                }
+                            }
+                        }
+                    } else if (constraint.getName().equals("Zahl oder leer")) {
+                        try {
+                            double d = POIUtil.getDoubleCellValueSafe(cell);
+                        } catch (NumberFormatException ex) {
+                            violationCounter++;
+                            loggingFrame.appendLine("Feld " + POIUtil.getFieldIdentifier(currentColIndex, currentRowIndex) + " ist keine Zahl!");
+                        }
                     } else if (constraint.getName().equals("Kleiner als")) {
+                        double parameter = getConstraintParameterAsDouble();
+                        try {
+                            double cellValue = POIUtil.getDoubleCellValueSafe(cell);
+                            if (cellValue >= parameter) {
+                                violationCounter++;
+                                loggingFrame.appendLine("Feld " + POIUtil.getFieldIdentifier(currentColIndex, currentRowIndex) + " ist nicht kleiner als " + parameter + "!");
+                            }
+                        } catch (NumberFormatException ex) {
+                            violationCounter++;
+                            loggingFrame.appendLine("Feld " + POIUtil.getFieldIdentifier(currentColIndex, currentRowIndex) + " ist keine Zahl!");
+                        }
                     } else if (constraint.getName().equals("Größer als")) {
+                        double parameter = getConstraintParameterAsDouble();
+                        try {
+                            double cellValue = POIUtil.getDoubleCellValueSafe(cell);
+                            if (cellValue <= parameter) {
+                                violationCounter++;
+                                loggingFrame.appendLine("Feld " + POIUtil.getFieldIdentifier(currentColIndex, currentRowIndex) + " ist nicht größer als " + parameter + "!");
+                            }
+                        } catch (NumberFormatException ex) {
+                            violationCounter++;
+                            loggingFrame.appendLine("Feld " + POIUtil.getFieldIdentifier(currentColIndex, currentRowIndex) + " ist keine Zahl!");
+                        }
                     } else if (constraint.getName().equals("Ist")) {
+                        String parameter = getConstraintParameterAsString();
+                        String cellValue = POIUtil.getStringCellValueSafe(cell);
+                        if (!parameter.equals(cellValue)) {
+                            violationCounter++;
+                            loggingFrame.appendLine("Feld " + POIUtil.getFieldIdentifier(currentColIndex, currentRowIndex) + " ist nicht gleich \"" + parameter + "\"!");
+                        }
                     } else if (constraint.getName().equals("Ist nicht")) {
+                        String parameter = getConstraintParameterAsString();
+                        String cellValue = POIUtil.getStringCellValueSafe(cell);
+                        if (parameter.equals(cellValue)) {
+                            violationCounter++;
+                            loggingFrame.appendLine("Feld " + POIUtil.getFieldIdentifier(currentColIndex, currentRowIndex) + " ist gleich \"" + parameter + "\"!");
+                        }
                     }
                 }
-                currentInputRowIndex++;
+                currentRowIndex++;
             }
         }
-        JOptionPane.showMessageDialog(this, "Die Überprüfung verlief ohne Fehler!", "Erfolg", JOptionPane.INFORMATION_MESSAGE, CalculationFrame.okIcon);
+        loggingFrame.appendLine("-----------------");
+        loggingFrame.appendLine("Insgesamt " + violationCounter + " Fehler gefunden");
+        if (violationCounter == 0) {
+            JOptionPane.showMessageDialog(this, "Die Überprüfung verlief ohne Fehler!", "Erfolg", JOptionPane.INFORMATION_MESSAGE, CalculationFrame.okIcon);
+        }
 }//GEN-LAST:event_okButtonActionPerformed
 
     private void selectInputFilesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectInputFilesButtonActionPerformed

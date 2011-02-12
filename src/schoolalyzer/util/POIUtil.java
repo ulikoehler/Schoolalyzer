@@ -29,6 +29,10 @@ public class POIUtil {
 
     private static final char[] upperLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
 
+    public static String getFieldIdentifier(int col, int row) {
+        return generateColumnName(col) + Integer.toString(row + 1);
+    }
+
     /**
      * Generates a column value (A, B, ..., AA, BB).
      * @param n The column index (zero-based)
@@ -155,6 +159,28 @@ public class POIUtil {
         } else if (sourceCell.getCellType() == Cell.CELL_TYPE_STRING) {
             targetCell.setCellType(Cell.CELL_TYPE_STRING);
             targetCell.setCellValue(sourceCell.getStringCellValue());
+        }
+    }
+
+    /**
+     * Returns a cell value as a double or throws a NumberFormatException
+     * if it can't be parsed as a double
+     * @param cell The cell to get the value from
+     * @return The cell value as a double
+     * @throws NumberFormatException If the cell value can't be represented as a double
+     */
+    public static double getDoubleCellValueSafe(Cell cell) throws NumberFormatException {
+        //Check if the cell is null
+        if (cell == null) {
+            throw new IllegalArgumentException("Cell argument is null!");
+        }
+        //Check the cell type
+        if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+            return cell.getNumericCellValue();
+        } else if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+            return Double.parseDouble(cell.getStringCellValue());
+        } else {
+            throw new NumberFormatException("The cell's content is neither a String nor a number!");
         }
     }
 
