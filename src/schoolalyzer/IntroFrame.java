@@ -20,6 +20,7 @@ public class IntroFrame extends javax.swing.JFrame {
     private CalculationFrame calculateFrame = new CalculationFrame();
     private CSVImporterFrame csvImporterFrame = new CSVImporterFrame();
     private DocumentMergerFrame documentMergerFrame = new DocumentMergerFrame();
+    private DataValidationFrame dataValidationFrame = new DataValidationFrame();
 
     /** Creates new form ActionSelectionFrame */
     public IntroFrame() {
@@ -39,6 +40,7 @@ public class IntroFrame extends javax.swing.JFrame {
         calculateMultiTableButton = new javax.swing.JButton();
         importCSVButton = new javax.swing.JButton();
         mergeSheetsButton = new javax.swing.JButton();
+        validateButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Schoolalyzer");
@@ -65,6 +67,13 @@ public class IntroFrame extends javax.swing.JFrame {
             }
         });
 
+        validateButton.setText("Daten validieren");
+        validateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                validateButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -76,16 +85,19 @@ public class IntroFrame extends javax.swing.JFrame {
                 .addComponent(importCSVButton, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(mergeSheetsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(validateButton, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(calculateMultiTableButton, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
-                    .addComponent(importCSVButton, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
-                    .addComponent(mergeSheetsButton, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(validateButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
+                    .addComponent(calculateMultiTableButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
+                    .addComponent(importCSVButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
+                    .addComponent(mergeSheetsButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -104,6 +116,10 @@ public class IntroFrame extends javax.swing.JFrame {
         documentMergerFrame.setVisible(true);
     }//GEN-LAST:event_mergeSheetsButtonActionPerformed
 
+    private void validateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_validateButtonActionPerformed
+        dataValidationFrame.setVisible(true);
+    }//GEN-LAST:event_validateButtonActionPerformed
+
     /**
     * @param args the command line arguments
     */
@@ -119,6 +135,7 @@ public class IntroFrame extends javax.swing.JFrame {
     private javax.swing.JButton calculateMultiTableButton;
     private javax.swing.JButton importCSVButton;
     private javax.swing.JButton mergeSheetsButton;
+    private javax.swing.JButton validateButton;
     // End of variables declaration//GEN-END:variables
 
 }

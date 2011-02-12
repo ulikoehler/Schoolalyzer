@@ -31,15 +31,18 @@
               <Component id="importCSVButton" min="-2" pref="169" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="mergeSheetsButton" min="-2" pref="202" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="validateButton" pref="205" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
+          <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="validateButton" alignment="0" pref="96" max="32767" attributes="0"/>
                   <Component id="calculateMultiTableButton" alignment="0" pref="96" max="32767" attributes="1"/>
                   <Component id="importCSVButton" alignment="0" pref="96" max="32767" attributes="1"/>
                   <Component id="mergeSheetsButton" alignment="0" pref="96" max="32767" attributes="1"/>
@@ -72,6 +75,14 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mergeSheetsButtonActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="validateButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Daten validieren"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="validateButtonActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>
