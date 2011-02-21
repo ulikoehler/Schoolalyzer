@@ -62,6 +62,11 @@ public class TetrisForm extends javax.swing.JFrame {
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setForeground(java.awt.Color.white);
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         PanelJuego.setBackground(new java.awt.Color(255, 255, 255));
         PanelJuego.setPreferredSize(new java.awt.Dimension(0, 0));
@@ -80,6 +85,12 @@ public class TetrisForm extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        TetrisMain.ventanaPrincipal = null;
+        TetrisMain.game = null;
+        TetrisMain.appletPrincipal = null;
+    }//GEN-LAST:event_formWindowClosing
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PanelJuego;

@@ -370,9 +370,12 @@ public class MotorGrafico {
                      */
 
                     try {
-                        tracker.waitForAll();
+                        if (tracker != null) {
+                            tracker.waitForAll();
+                        }
                     } catch (Exception e) {
-                        System.out.println("Excepcion: " + e.getMessage());
+                        System.out.println("Excepcion MotorGrafico: " + e.getMessage() + "  " + e.getClass().getCanonicalName());
+                        e.printStackTrace();
                     }
 
                     g.drawImage(img, xReal, yReal, MotorGrafico.getCeldaAncho(), MotorGrafico.getCeldaAlto(), null);
@@ -519,7 +522,7 @@ public class MotorGrafico {
                     try {
                         tracker.waitForAll();
                     } catch (Exception e) {
-                        System.out.println("Excepcion: " + e.getMessage());
+                        System.out.println("Excepcion MotorGrafico2: " + e.getMessage());
                     }
 
                     //contenedorBuffer.drawImage(img, 0, 0, imagenBuffer.getWidth(), imagenBuffer.getHeight(), Main.ventanaPrincipal);
@@ -586,7 +589,7 @@ public class MotorGrafico {
             try {
                 tracker.waitForAll();
             } catch (Exception e) {
-                System.out.println("Excepcion: " + e.getMessage());
+                System.out.println("Excepcion MotorGrafico: " + e.getMessage());
             }
 
             contenedor.drawImage(imagenBuffer, 0, 0, null);

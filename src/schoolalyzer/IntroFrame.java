@@ -50,7 +50,10 @@ public class IntroFrame extends javax.swing.JFrame {
                     easterEggStartTime = -1;
                     easterEggCounter = 0;
                 } else if (easterEggCounter == 2) {
+                    easterEggCounter = 0;
+                    easterEggStartTime = -1;
                     TetrisMain.main(new String[]{});
+                    TetrisMain.reinitializeGame();
                 } else {
                     easterEggCounter++;
                 }

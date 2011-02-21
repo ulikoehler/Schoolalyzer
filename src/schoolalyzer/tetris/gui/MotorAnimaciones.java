@@ -57,7 +57,7 @@ public class MotorAnimaciones {
             try {
                 Thread.sleep(8);
             } catch (Exception ex) {
-                System.out.println("Excepcion: " + ex.getMessage());
+                System.out.println("Excepcion MotorAnimationes: " + ex.getMessage());
             }
         }
     }

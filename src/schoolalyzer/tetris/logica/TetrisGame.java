@@ -963,10 +963,11 @@ public class TetrisGame {
                     if (this.getMenuPrincipal().getOpcionAceptadaSubmenu()) {
                         //Si no ha acabado el juego, lo acaba (en realidad es una tonteria):
                         if (this.getJuegoComenzado()) {
+                            //Dispose the window
+                            TetrisMain.ventanaPrincipal.setVisible(false);
                             this.finalizarJuego();
                         }
-                        //Sale del programa:
-                        System.exit(0);
+
                     }
                 } //...o si se ha escogido no salir (volver al menu principal):
                 else if (opcionSeleccionada.toUpperCase().equals("FINALIZAR_NO")) {

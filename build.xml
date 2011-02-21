@@ -120,7 +120,7 @@
                 <keep>
                     <package>
                         <patternset>
-                            <include name="schoolalyzer.tetris.img"/>
+                            <include name="schoolalyzer.tetris.img.*"/>
                         </patternset>
                     </package>
                 </keep>
