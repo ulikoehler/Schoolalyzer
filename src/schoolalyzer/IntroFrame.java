@@ -8,8 +8,14 @@
  *
  * Created on 05.02.2011, 15:56:56
  */
-
 package schoolalyzer;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import javax.swing.AbstractAction;
+import javax.swing.JComponent;
+import javax.swing.KeyStroke;
+import schoolalyzer.tetris.principal.TetrisMain;
 
 /**
  *
@@ -17,15 +23,39 @@ package schoolalyzer;
  */
 public class IntroFrame extends javax.swing.JFrame {
     //Frames
+
     private CalculationFrame calculateFrame = new CalculationFrame();
     private CSVImporterFrame csvImporterFrame = new CSVImporterFrame();
     private DocumentMergerFrame documentMergerFrame = new DocumentMergerFrame();
     private DataValidationFrame dataValidationFrame = new DataValidationFrame();
+    //Easteregg
+    private int easterEggCounter = 0;
+    private long easterEggStartTime = -1;
 
     /** Creates new form ActionSelectionFrame */
     public IntroFrame() {
         initComponents();
         setLocationRelativeTo(null);
+        calculateMultiTableButton.requestFocus();
+        mainPanel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_T, KeyEvent.CTRL_MASK), "easteregg");
+        mainPanel.getActionMap().put("easteregg", new AbstractAction() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                long currentTime = System.currentTimeMillis();
+                if (easterEggStartTime == -1) {
+                    easterEggCounter = 1;
+                    easterEggStartTime = currentTime;
+                } else if (easterEggStartTime < (currentTime - 500)) {
+                    easterEggStartTime = -1;
+                    easterEggCounter = 0;
+                } else if (easterEggCounter == 2) {
+                    TetrisMain.main(new String[]{});
+                } else {
+                    easterEggCounter++;
+                }
+            }
+        });
     }
 
     /** This method is called from within the constructor to
@@ -37,48 +67,55 @@ public class IntroFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        calculateMultiTableButton = new javax.swing.JButton();
-        importCSVButton = new javax.swing.JButton();
-        mergeSheetsButton = new javax.swing.JButton();
+        mainPanel = new javax.swing.JPanel();
         validateButton = new javax.swing.JButton();
+        calculateMultiTableButton = new javax.swing.JButton();
+        mergeSheetsButton = new javax.swing.JButton();
+        importCSVButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Schoolalyzer");
         setResizable(false);
-
-        calculateMultiTableButton.setText("<html>Berechnungen über<p>\nmehrere Tabellen durchführen");
-        calculateMultiTableButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                calculateMultiTableButtonActionPerformed(evt);
-            }
-        });
-
-        importCSVButton.setText("<html>CSV-Daten importieren");
-        importCSVButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                importCSVButtonActionPerformed(evt);
-            }
-        });
-
-        mergeSheetsButton.setText("<html>Excel-Tabellen zusammenführen");
-        mergeSheetsButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mergeSheetsButtonActionPerformed(evt);
-            }
-        });
+        getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
 
         validateButton.setText("Daten validieren");
+        validateButton.setNextFocusableComponent(calculateMultiTableButton);
         validateButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 validateButtonActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+        calculateMultiTableButton.setText("<html>Berechnungen über<p>\nmehrere Tabellen durchführen");
+        calculateMultiTableButton.setFocusCycleRoot(true);
+        calculateMultiTableButton.setNextFocusableComponent(importCSVButton);
+        calculateMultiTableButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                calculateMultiTableButtonActionPerformed(evt);
+            }
+        });
+
+        mergeSheetsButton.setText("<html>Excel-Tabellen zusammenführen");
+        mergeSheetsButton.setNextFocusableComponent(validateButton);
+        mergeSheetsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mergeSheetsButtonActionPerformed(evt);
+            }
+        });
+
+        importCSVButton.setText("<html>CSV-Daten importieren");
+        importCSVButton.setNextFocusableComponent(mergeSheetsButton);
+        importCSVButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                importCSVButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
+        mainPanel.setLayout(mainPanelLayout);
+        mainPanelLayout.setHorizontalGroup(
+            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mainPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(calculateMultiTableButton, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -86,20 +123,22 @@ public class IntroFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(mergeSheetsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(validateButton, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
+                .addComponent(validateButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+        mainPanelLayout.setVerticalGroup(
+            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mainPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(validateButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
-                    .addComponent(calculateMultiTableButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
-                    .addComponent(importCSVButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
-                    .addComponent(mergeSheetsButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE))
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(validateButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)
+                    .addComponent(calculateMultiTableButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)
+                    .addComponent(importCSVButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)
+                    .addComponent(mergeSheetsButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE))
                 .addContainerGap())
         );
+
+        getContentPane().add(mainPanel);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -121,22 +160,22 @@ public class IntroFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_validateButtonActionPerformed
 
     /**
-    * @param args the command line arguments
-    */
+     * @param args the command line arguments
+     */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             @Override
             public void run() {
                 new IntroFrame().setVisible(true);
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton calculateMultiTableButton;
     private javax.swing.JButton importCSVButton;
+    private javax.swing.JPanel mainPanel;
     private javax.swing.JButton mergeSheetsButton;
     private javax.swing.JButton validateButton;
     // End of variables declaration//GEN-END:variables
-
 }

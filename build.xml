@@ -72,7 +72,7 @@
 
     -->
 
-     <target name="single-jar" depends="jar">
+    <target name="single-jar" depends="jar">
 
         <!-- Change the value of this property to be the name of your JAR,
              minus the .jar extension. It should not have spaces.
@@ -108,4 +108,24 @@
         <delete file="${store.dir}/temp_final.jar"/>
 
     </target>
+
+    <target depends="single-jar" name="yguard">
+        <taskdef name="yguard"
+      classname="com.yworks.yguard.YGuardTask"
+      classpath="lib/yguard.jar"/>
+        <yguard>
+            <inoutpair in="singlejar/Schoolalyzer.jar" out="singlejar/Schoolalyzer-obfuscated.jar" />
+            <shrink/>
+            <rename mainclass="schoolalyzer.IntroFrame" replaceClassNameStrings="true">
+                <keep>
+                    <package>
+                        <patternset>
+                            <include name="schoolalyzer.tetris.img"/>
+                        </patternset>
+                    </package>
+                </keep>
+            </rename>
+        </yguard>
+    </target>
+
 </project>
