@@ -138,7 +138,7 @@ public class DataValidationFrame extends javax.swing.JFrame {
         constraintParameterField = new javax.swing.JTextField();
 
         setTitle("Schoolalyzer - Dokumente zusammenführen");
-        setIconImage(CalculationFrame.piIcon.getImage());
+        setIconImage(schoolalyzer.CalculationFrame.piIcon.getImage());
 
         okButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/schoolalyzer/icons/task-complete.png"))); // NOI18N
         okButton.setText("Überprüfen");
@@ -197,9 +197,9 @@ public class DataValidationFrame extends javax.swing.JFrame {
         Spalte.setText("Spalte:");
 
         constraintTypeComboBox.setModel(getConstraintsModel());
-        constraintTypeComboBox.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                constraintTypeComboBoxPropertyChange(evt);
+        constraintTypeComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                constraintTypeComboBoxActionPerformed(evt);
             }
         });
 
@@ -227,9 +227,9 @@ public class DataValidationFrame extends javax.swing.JFrame {
                             .addComponent(startRowLabel))
                         .addGap(22, 22, 22)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(sheetIndexSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 482, Short.MAX_VALUE)
-                            .addComponent(startRowSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 482, Short.MAX_VALUE)
-                            .addComponent(startColSpinner, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 482, Short.MAX_VALUE))
+                            .addComponent(sheetIndexSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 490, Short.MAX_VALUE)
+                            .addComponent(startRowSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 490, Short.MAX_VALUE)
+                            .addComponent(startColSpinner, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 490, Short.MAX_VALUE))
                         .addGap(20, 20, 20))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(inputFilesLabel)
@@ -238,7 +238,7 @@ public class DataValidationFrame extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(inputStatusLabel)
                         .addGap(47, 47, 47))
-                    .addComponent(okButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 604, Short.MAX_VALUE)
+                    .addComponent(okButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
@@ -259,7 +259,7 @@ public class DataValidationFrame extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(colCountLabel)
                                 .addGap(18, 18, 18)
-                                .addComponent(colCountSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 486, Short.MAX_VALUE)))
+                                .addComponent(colCountSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 489, Short.MAX_VALUE)))
                         .addGap(20, 20, 20)))
                 .addContainerGap())
         );
@@ -312,6 +312,7 @@ public class DataValidationFrame extends javax.swing.JFrame {
             return;
         }
         LoggingFrame loggingFrame = new LoggingFrame();
+        loggingFrame.setVisible(true);
         //Read the start and the stop row
         int colCount = colCountSpinner.getIntValue();
         int sheetNum = sheetIndexSpinner.getIntValue() - 1;
@@ -321,6 +322,7 @@ public class DataValidationFrame extends javax.swing.JFrame {
         for (Workbook inputWorkbook : inputWorkbooks) {
             String filename = workbookToFilename.get(inputWorkbook);
             loggingFrame.appendLine("Datei: " + filename);
+            loggingFrame.appendLine("------");
             Sheet inputSheet = inputWorkbook.getSheetAt(sheetNum);
             int currentRowIndex = startRow;
             while (true) { //Iterate over all rows
@@ -340,18 +342,20 @@ public class DataValidationFrame extends javax.swing.JFrame {
                 for (int i = startCol; i < (startCol + colCount); i++) { //Iterate over the columns in the current row until one is empty
                     Cell cell = POIUtil.getCellSafe(inputSheet, currentColIndex, i);
                     Constraint constraint = constraints.get(currentColIndex);
-                    if (constraint.getName().equals("Keine")) {
-                    } else if (constraint.getName().equals("Nichtleer")) {
+                    String constraintName = constraint.getName();
+                    if (constraintName.equals("Keine")) {
+                    } else if (constraintName.equals("Nichtleer")) {
                         if (POIUtil.isEmpty(inputSheet, currentRowIndex, i)) {
                             violationCounter++;
                             loggingFrame.appendLine("Feld " + POIUtil.getFieldIdentifier(currentColIndex, currentRowIndex) + " ist leer (sollte nicht leer sein)!");
                         }
-                    } else if (constraint.getName().equals("Leer")) {
+                    } else if (constraintName.equals("Leer")) {
                         if (!POIUtil.isEmpty(inputSheet, currentRowIndex, i)) {
                             violationCounter++;
                             loggingFrame.appendLine("Feld " + POIUtil.getFieldIdentifier(currentColIndex, currentRowIndex) + " ist nicht leer (sollte leer sein)!");
                         }
-                    } else if (constraint.getName().equals("Zahl")) {
+                        System.out.println("x");
+                    } else if (constraintName.equals("Zahl")) {
                         if (POIUtil.isEmpty(inputSheet, currentRowIndex, i)) {
                             violationCounter++;
                             loggingFrame.appendLine("Feld " + POIUtil.getFieldIdentifier(currentColIndex, currentRowIndex) + " ist leer (sollte Zahl enthalten)!");
@@ -368,14 +372,14 @@ public class DataValidationFrame extends javax.swing.JFrame {
                                 }
                             }
                         }
-                    } else if (constraint.getName().equals("Zahl oder leer")) {
+                    } else if (constraintName.equals("Zahl oder leer")) {
                         try {
                             double d = POIUtil.getDoubleCellValueSafe(cell);
                         } catch (NumberFormatException ex) {
                             violationCounter++;
                             loggingFrame.appendLine("Feld " + POIUtil.getFieldIdentifier(currentColIndex, currentRowIndex) + " ist keine Zahl!");
                         }
-                    } else if (constraint.getName().equals("Kleiner als")) {
+                    } else if (constraintName.equals("Kleiner als")) {
                         double parameter = getConstraintParameterAsDouble();
                         try {
                             double cellValue = POIUtil.getDoubleCellValueSafe(cell);
@@ -387,7 +391,7 @@ public class DataValidationFrame extends javax.swing.JFrame {
                             violationCounter++;
                             loggingFrame.appendLine("Feld " + POIUtil.getFieldIdentifier(currentColIndex, currentRowIndex) + " ist keine Zahl!");
                         }
-                    } else if (constraint.getName().equals("Größer als")) {
+                    } else if (constraintName.equals("Größer als")) {
                         double parameter = getConstraintParameterAsDouble();
                         try {
                             double cellValue = POIUtil.getDoubleCellValueSafe(cell);
@@ -399,14 +403,14 @@ public class DataValidationFrame extends javax.swing.JFrame {
                             violationCounter++;
                             loggingFrame.appendLine("Feld " + POIUtil.getFieldIdentifier(currentColIndex, currentRowIndex) + " ist keine Zahl!");
                         }
-                    } else if (constraint.getName().equals("Ist")) {
+                    } else if (constraintName.equals("Ist")) {
                         String parameter = getConstraintParameterAsString();
                         String cellValue = POIUtil.getStringCellValueSafe(cell);
                         if (!parameter.equals(cellValue)) {
                             violationCounter++;
                             loggingFrame.appendLine("Feld " + POIUtil.getFieldIdentifier(currentColIndex, currentRowIndex) + " ist nicht gleich \"" + parameter + "\"!");
                         }
-                    } else if (constraint.getName().equals("Ist nicht")) {
+                    } else if (constraintName.equals("Ist nicht")) {
                         String parameter = getConstraintParameterAsString();
                         String cellValue = POIUtil.getStringCellValueSafe(cell);
                         if (parameter.equals(cellValue)) {
@@ -417,11 +421,14 @@ public class DataValidationFrame extends javax.swing.JFrame {
                 }
                 currentRowIndex++;
             }
+            loggingFrame.appendLine("------");
         }
-        loggingFrame.appendLine("-----------------");
+        loggingFrame.appendLine("-------------------------------");
         loggingFrame.appendLine("Insgesamt " + violationCounter + " Fehler gefunden");
         if (violationCounter == 0) {
             JOptionPane.showMessageDialog(this, "Die Überprüfung verlief ohne Fehler!", "Erfolg", JOptionPane.INFORMATION_MESSAGE, CalculationFrame.okIcon);
+        } else {
+            JOptionPane.showMessageDialog(this, "Einige Daten passen nicht zum vorgegebenen Schema!", "Fehler", JOptionPane.ERROR_MESSAGE, CalculationFrame.piIcon);
         }
 }//GEN-LAST:event_okButtonActionPerformed
 
@@ -477,23 +484,23 @@ public class DataValidationFrame extends javax.swing.JFrame {
         constraintParameterField.setText(currentConstraint.getParam());
     }//GEN-LAST:event_currentColumnSpinnerStateChanged
 
-    private void constraintTypeComboBoxPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_constraintTypeComboBoxPropertyChange
-        int currentColumn = currentColumnSpinner.getIntValue();
-        if (constraints.get(currentColumn) == null) {
-            currentConstraint = new Constraint("Keiner", null);
-            constraints.put(currentColumn, currentConstraint);
-        }
-        currentConstraint.setName(constraintTypeComboBox.getSelectedItem().toString());
-    }//GEN-LAST:event_constraintTypeComboBoxPropertyChange
-
     private void constraintParameterFieldPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_constraintParameterFieldPropertyChange
         int currentColumn = currentColumnSpinner.getIntValue();
         if (constraints.get(currentColumn) == null) {
             currentConstraint = new Constraint("Keiner", null);
             constraints.put(currentColumn, currentConstraint);
         }
-        currentConstraint.setParam(constraintParameterField.toString());
+        currentConstraint.setParam(constraintParameterField.getText().toString());
     }//GEN-LAST:event_constraintParameterFieldPropertyChange
+
+    private void constraintTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_constraintTypeComboBoxActionPerformed
+        int currentColumn = currentColumnSpinner.getIntValue();
+        if (constraints.get(currentColumn) == null) {
+            currentConstraint = new Constraint("Keiner", null);
+            constraints.put(currentColumn, currentConstraint);
+        }
+        currentConstraint.setName(constraintTypeComboBox.getSelectedItem().toString());
+    }//GEN-LAST:event_constraintTypeComboBoxActionPerformed
 
     /**
      * @param args the command line arguments

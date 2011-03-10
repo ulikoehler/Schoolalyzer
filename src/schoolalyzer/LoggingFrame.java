@@ -23,6 +23,7 @@ public class LoggingFrame extends javax.swing.JFrame {
 
     public void appendLine(String line) {
         textArea.append(line);
+        textArea.append("\n");
     }
 
     public void appendLineIndented(String line) {

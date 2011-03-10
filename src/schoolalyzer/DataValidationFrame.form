@@ -36,9 +36,9 @@
                       </Group>
                       <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="sheetIndexSpinner" alignment="1" pref="482" max="32767" attributes="0"/>
-                          <Component id="startRowSpinner" alignment="1" pref="482" max="32767" attributes="0"/>
-                          <Component id="startColSpinner" alignment="0" pref="482" max="32767" attributes="0"/>
+                          <Component id="sheetIndexSpinner" alignment="1" pref="490" max="32767" attributes="0"/>
+                          <Component id="startRowSpinner" alignment="1" pref="490" max="32767" attributes="0"/>
+                          <Component id="startColSpinner" alignment="0" pref="490" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                   </Group>
@@ -50,7 +50,7 @@
                       <Component id="inputStatusLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="okButton" alignment="1" pref="604" max="32767" attributes="0"/>
+                  <Component id="okButton" alignment="1" pref="629" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
@@ -75,7 +75,7 @@
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="colCountLabel" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="colCountSpinner" pref="486" max="32767" attributes="0"/>
+                              <Component id="colCountSpinner" pref="489" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
@@ -251,7 +251,7 @@
         </Property>
       </Properties>
       <Events>
-        <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="constraintTypeComboBoxPropertyChange"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="constraintTypeComboBoxActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="constraintLabel">
