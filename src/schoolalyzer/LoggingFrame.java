@@ -19,6 +19,7 @@ public class LoggingFrame extends javax.swing.JFrame {
     /** Creates new form LoggingFrame */
     public LoggingFrame() {
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     public void appendLine(String line) {
@@ -42,7 +43,7 @@ public class LoggingFrame extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         textArea = new javax.swing.JTextArea();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Ergebnisse");
 
         textArea.setColumns(20);
         textArea.setRows(5);

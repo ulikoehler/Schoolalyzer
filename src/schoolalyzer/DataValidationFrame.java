@@ -341,6 +341,9 @@ public class DataValidationFrame extends javax.swing.JFrame {
                 for (int currentColIndex = startCol; currentColIndex < (startCol + colCount); currentColIndex++) { //Iterate over the columns in the current row until one is empty
                     Cell cell = POIUtil.getCellSafe(inputSheet, currentRowIndex, currentColIndex);
                     Constraint constraint = constraints.get(currentColIndex);
+                    if(constraint == null) { //No constraint for the current column
+                        continue;
+                    }
                     String constraintName = constraint.getName();
                     if (constraintName.equals("Keine")) {
                     } else if (constraintName.equals("Nichtleer")) {
