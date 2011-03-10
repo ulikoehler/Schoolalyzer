@@ -44,7 +44,7 @@ public class DataValidationFrame extends javax.swing.JFrame {
     private List<Workbook> inputWorkbooks = new LinkedList<Workbook>();
     private HashMap<Workbook, String> workbookToFilename = new HashMap<Workbook, String>();
     //Constraints
-    private HashMap<Integer, Constraint> constraints = new HashMap<Integer, Constraint>();
+    private HashMap<Integer, Constraint> constraints = new HashMap<Integer, Constraint>(); //Key: column number; Value: Constraint
     private Constraint currentConstraint = null;
 
     private class Constraint {
@@ -338,29 +338,28 @@ public class DataValidationFrame extends javax.swing.JFrame {
                     break;
                 }
                 //Process the current row
-                int currentColIndex = startCol;
-                for (int i = startCol; i < (startCol + colCount); i++) { //Iterate over the columns in the current row until one is empty
-                    Cell cell = POIUtil.getCellSafe(inputSheet, currentColIndex, i);
+                for (int currentColIndex = startCol; currentColIndex < (startCol + colCount); currentColIndex++) { //Iterate over the columns in the current row until one is empty
+                    Cell cell = POIUtil.getCellSafe(inputSheet, currentRowIndex, currentColIndex);
                     Constraint constraint = constraints.get(currentColIndex);
                     String constraintName = constraint.getName();
                     if (constraintName.equals("Keine")) {
                     } else if (constraintName.equals("Nichtleer")) {
-                        if (POIUtil.isEmpty(inputSheet, currentRowIndex, i)) {
+                        if (POIUtil.isEmpty(inputSheet, currentRowIndex, currentColIndex)) {
                             violationCounter++;
                             loggingFrame.appendLine("Feld " + POIUtil.getFieldIdentifier(currentColIndex, currentRowIndex) + " ist leer (sollte nicht leer sein)!");
                         }
                     } else if (constraintName.equals("Leer")) {
-                        if (!POIUtil.isEmpty(inputSheet, currentRowIndex, i)) {
+                        if (!POIUtil.isEmpty(inputSheet, currentRowIndex, currentColIndex)) {
                             violationCounter++;
                             loggingFrame.appendLine("Feld " + POIUtil.getFieldIdentifier(currentColIndex, currentRowIndex) + " ist nicht leer (sollte leer sein)!");
                         }
                         System.out.println("x");
                     } else if (constraintName.equals("Zahl")) {
-                        if (POIUtil.isEmpty(inputSheet, currentRowIndex, i)) {
+                        if (POIUtil.isEmpty(inputSheet, currentRowIndex, currentColIndex)) {
                             violationCounter++;
                             loggingFrame.appendLine("Feld " + POIUtil.getFieldIdentifier(currentColIndex, currentRowIndex) + " ist leer (sollte Zahl enthalten)!");
                         } else {
-                            if (!POIUtil.isEmpty(inputSheet, currentRowIndex, i)) {
+                            if (!POIUtil.isEmpty(inputSheet, currentRowIndex, currentColIndex)) {
                                 violationCounter++;
                                 loggingFrame.appendLine("Feld " + POIUtil.getFieldIdentifier(currentColIndex, currentRowIndex) + " ist keine leer (sollte Zahl sein)!");
                             } else {
@@ -374,7 +373,7 @@ public class DataValidationFrame extends javax.swing.JFrame {
                         }
                     } else if (constraintName.equals("Zahl oder leer")) {
                         try {
-                            double d = POIUtil.getDoubleCellValueSafe(cell);
+                            double cellValue = POIUtil.getDoubleCellValueSafe(cell);
                         } catch (NumberFormatException ex) {
                             violationCounter++;
                             loggingFrame.appendLine("Feld " + POIUtil.getFieldIdentifier(currentColIndex, currentRowIndex) + " ist keine Zahl!");
